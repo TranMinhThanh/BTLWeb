@@ -8,10 +8,10 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Request IT') }}</title>
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet">
     @yield('head')
 </head>
 <body>
@@ -29,9 +29,10 @@
                     </button>
 
                     <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
+                    <a class="navbar-brand" href="{{ url('/home') }}">
+                        {{--{{ config('app.name', 'Request IT') }}--}}
                     </a>
+                    <label class="control-label h3">Request IT</label>
                 </div>
 
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
@@ -51,7 +52,6 @@
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                     {{ Auth::user()->name }} <span class="caret"></span>
                                 </a>
-
                                 <ul class="dropdown-menu" role="menu">
                                     <li>
                                         <a href="{{ route('logout') }}"
@@ -66,16 +66,20 @@
                                     </li>
                                 </ul>
                             </li>
+
                         @endif
                     </ul>
                 </div>
             </div>
         </nav>
-
         @yield('content')
     </div>
 
     <!-- Scripts -->
-    <!--<script src="{{ asset('js/app.js') }}"></script>-->
+    <script src= {{ asset('js/ajax/libs/jquery/jquery.min.js') }}></script>
+    <script src= {{ asset('js/ajax/libs/jqueryui/jquery-ui.min.js') }}></script>
+    <script src= {{ asset('js/jquery-1.9.1.min.js') }}></script>
+    <script src= {{ asset('js/bootstrap.min.js') }}></script>
+    @yield('script');
 </body>
 </html>

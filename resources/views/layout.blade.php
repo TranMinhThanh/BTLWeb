@@ -19,9 +19,11 @@
             margin: 15px;
             background-color: #23527c;
             color: #FFFFFF;
+            margin-top: 0px;
         }
         #creatRequest:hover{
             color: deeppink;
+
         }
         .glyphicon{
             padding: 5px;
@@ -37,9 +39,8 @@
 
 @section('content')
 <div class ="container-fluid" style="background-color:#98cbe8 ">
-    <div class="row">
-        <div class ='col-sm-3' id= 'menu' style="background-color:#98cbe8 ">
-            <div class="panel-title">Request IT</div>
+        <div class ='col-sm-2' id= 'menu' style="background-color:#98cbe8 ">
+           <!-- <div class="panel-title">Request IT</div>-->
             <div class="row"><button class ='btn col-sm-offset-1' id="creatRequest">+ THÊM YÊU CẦU</button></div>
 
             <div class="panel panel-default">
@@ -102,14 +103,10 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-9">
-            <div id = 'content'>
+        <div class="col-sm-10">
                 {{--@include('createRequest');--}}
-                @yield('form');
-            </div>
-
+                @yield('child_content');
         </div>
-    </div>
 </div>
 <script type="text/javascript">
     function display() {
