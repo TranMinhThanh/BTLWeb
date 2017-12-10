@@ -13,9 +13,10 @@ class CreateImagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('request_images', function (Blueprint $table) {
+        Schema::create('images', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('request_id');
+            $table->unsignedInteger('request_id')->nullable();
+            $table->foreign('request_id')->references('id')->on('requests')->onDelete('set null');
             $table->text('url_image');
         });
     }
@@ -27,6 +28,6 @@ class CreateImagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('request_images');
+        Schema::dropIfExists('images');
     }
 }

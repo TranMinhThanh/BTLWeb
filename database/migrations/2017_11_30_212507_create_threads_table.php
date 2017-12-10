@@ -13,10 +13,12 @@ class CreateThreadsTable extends Migration
      */
     public function up()
     {
-        Schema::create('request_threads', function (Blueprint $table) {
+        Schema::create('threads', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('request_id');
-            $table->unsignedInteger('employee_id');
+            $table->unsignedInteger('request_id')->nullable();
+            $table->foreign('request_id')->references('id')->on('requests')->onDelete('set null');
+            $table->unsignedInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->longText('content');
             $table->integer('type')->nullable();
             $table->string('note')->nullable();
@@ -31,6 +33,6 @@ class CreateThreadsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('request_threads');
+        Schema::dropIfExists('threads');
     }
 }

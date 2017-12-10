@@ -13,10 +13,12 @@ class CreateRelatersTable extends Migration
      */
     public function up()
     {
-        Schema::create('request_relaters', function (Blueprint $table) {
+        Schema::create('relaters', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('request_id');
-            $table->unsignedInteger('employee_id');
+            $table->unsignedInteger('request_id')->nullable();
+            $table->foreign('request_id')->references('id')->on('requests')->onDelete('set null');
+            $table->unsignedInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
         });
     }
 
@@ -27,6 +29,6 @@ class CreateRelatersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('request_relaters');
+        Schema::dropIfExists('relaters');
     }
 }
