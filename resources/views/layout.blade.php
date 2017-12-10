@@ -1,8 +1,6 @@
-<!doctype html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layouts.app')
+
+@section('head')
     <title> @yield('title')</title>
 
     <link rel="stylesheet" href="{{asset("css/bootstrap.css")}}">
@@ -32,7 +30,12 @@
             margin: 1%;
         }
     </style>
-</head>
+    <script type="text/javascript" src="{{asset("js/bootstrap.min.js")}}"></script>
+    @yield('child_head')
+
+@endsection
+
+@section('content')
 <div class ="container-fluid" style="background-color:#98cbe8 ">
     <div class="row">
         <div class ='col-sm-3' id= 'menu' style="background-color:#98cbe8 ">
@@ -101,7 +104,8 @@
         </div>
         <div class="col-sm-9">
             <div id = 'content'>
-                @include('createRequest');
+                {{--@include('createRequest');--}}
+                @yield('form');
             </div>
 
         </div>
@@ -125,6 +129,4 @@
         }
     }
 </script>
-<script type="text/javascript" src="{{asset("js/jquery-1.9.1.min.js")}}"></script>
-<script type="text/javascript" src="{{asset("js/bootstrap.min.js")}}"></script>
-</body>
+@endsection

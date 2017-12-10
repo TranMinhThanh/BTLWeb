@@ -26,6 +26,20 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="user_id" class="col-md-4 control-label">User ID</label>
+
+                            <div class="col-md-6">
+                                <input id="user_id" type="text" class="form-control" name="user_id" value="{{ old('user_id') }}" required autofocus>
+                            </div>
+
+                            @if ($errors->has('user_id'))
+                                <span class="help-block">
+                                        <strong>{{ $errors->first('user_id') }}</strong>
+                                    </span>
+                            @endif
+                        </div>
+
+                        <div class="form-group">
                             <label for="age" class="col-md-4 control-label">Age</label>
 
                             <div class="col-md-6">

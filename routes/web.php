@@ -19,6 +19,8 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/app', function (){
-   return view('layout');
-});
+Route::get('app', 'RequestController@getCreateView');
+Route::post('app',
+    ['as' => 'createRequest',
+     'uses' => 'RequestController@createRequest'
+]);
