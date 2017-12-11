@@ -67,6 +67,7 @@
             </div>
             <div class="panel panel-body col-md-12">
                 //binh luan
+                <a href="#">Hiển thị thêm bình luận</a>
             </div>
             <div class=" panel panel-body">
                 <div ><label class="control-label h4"><span class="glyphicon glyphicon-edit"></span>Binh luan</label></div>

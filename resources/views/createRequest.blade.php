@@ -9,8 +9,11 @@
 @endsection
 
 @section('child_content')
-    <div id='contentRequest'>
-        <div class ='row h4'><label class = "control-label" >Thêm yêu cầu</label></div>
+    <div id='contentRequest' class="panel panel-default" style="margin-top: 5%">
+        <div class="panel panel-heading">
+        <label class = "control-label h4" >Thêm yêu cầu</label>
+        </div>
+        <div class="panel panel-body">
         <div class="col-md-12">
             <form margin=3% method="post" id="requestForm" action="{{ route('createRequest') }}">
                 {{ csrf_field() }}
@@ -85,6 +88,7 @@
                     </div>
                 </div>
             </form>
+        </div>
         </div>
     </div>
 @endsection
