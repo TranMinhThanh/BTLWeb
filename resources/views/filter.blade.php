@@ -2,7 +2,7 @@
 @section('child_content')
     <div class="panel panel-default" style="margin-top: 5%">
         <div class="panel panel-heading">
-            <label class="h4 col-md-10">{{$title}}</label>
+            <label class="h4 col-md-10">dsgdfgdf</label>
             <div class="btn-toolbar ">
             <button type="button" class="btn btn-primary  " title="Reset bộ lọc"><span class="glyphicon glyphicon-refresh"></span></button>
             <button type="button" class="btn btn-primary " title="Tìm kiếm"><span class="glyphicon glyphicon-search"></span></button>

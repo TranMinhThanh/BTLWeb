@@ -27,7 +27,7 @@
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for ='priority' id="priority" class="control-label">Mức độ ưu tiên</label>
-                        <select class="form-control" id="priority">
+                        <select class="form-control" id="priority" name="priority">
                             <option value="1">Thấp</option>
                             <option value="2">Bình thường</option>
                             <option value="3">Cao</option>
@@ -38,29 +38,29 @@
                     <div class="form-group col-md-6">
                         <label for ='deadline' id="deadline_label" class="control-label">Ngày hết hạn</label>
                         {{--<input type="text" name="name" id ="deadline" class="form-control">--}}
-                        <input id="deadline" type= 'date' class="form-control" />
+                        <input id="deadline" type= 'date' name="deadline" class="form-control" />
 
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="form-group col-md-6">
-                        <label for ='nameOfWork' class="control-label">Bộ phận IT</label>
-                        <select class="form-control" id="">
-                            <option>IT-HaNoi</option>
-                            <option>IT-DaNang</option>
+                        <label for ='team' class="control-label">Bộ phận IT</label>
+                        <select class="form-control" id="team" name="team">
+                            <option value="1">IT-HaNoi</option>
+                            <option value="2">IT-DaNang</option>
                         </select>
                     </div>
                     <div class="form-group col-md-6">
-                        <label for ='nameOfWork' class="control-label">Người liên quan</label>
-                        <input type="text" name="name" id ="nameOfWork" class="form-control">
+                        <label for ='relater' class="control-label">Người liên quan</label>
+                        <input type="text" name="relater" id ="relater" class="form-control">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="form-group col-md-12">
                         <label class="control-label">Nội dung</label>
-                        <textarea font-family ='Time New Roman'></textarea>
+                        <textarea id="content" name="content" font-family ='Time New Roman'></textarea>
                         <div class="btn-group">
                             <button type="button" class ="btn btn-default">Bold</button>
                             <button type="button" class ="btn btn-default" >Italic</button>
@@ -72,7 +72,6 @@
                         <div class="btn-group">
                             <button type="button" class="btn btn-default "><span class="glyphicon glyphicon-italic"></span> </button>
                         </div>
-                        <textarea class="form-control" rows="5"></textarea>
                     </div>
 
                 </div>
