@@ -47,8 +47,15 @@
                     <div class="form-group col-md-6">
                         <label for ='team' class="control-label">Bộ phận IT</label>
                         <select class="form-control" id="team" name="team">
-                            <option value="1">IT-HaNoi</option>
-                            <option value="2">IT-DaNang</option>
+                            <?php
+                                foreach($teams as $team){
+                            ?>
+                            <option value="{{ $team->id }}"> {{ $team->name }} </option>
+                                {{--@foreach()--}}
+                            <?php
+                                }
+                            ?>
+
                         </select>
                     </div>
                     <div class="form-group col-md-6">

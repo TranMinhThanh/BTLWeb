@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Team;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Tests\TestCase;
 
 class RequestController extends Controller
 {
@@ -20,7 +22,9 @@ class RequestController extends Controller
     }
 
     public function getCreateView(){
-        return view('createRequest');
+        $teams = Team::all();
+        $data['teams'] = $teams;
+        return view('createRequest',$data);
     }
 
     public function getEditView(){
