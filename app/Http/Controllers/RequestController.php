@@ -28,7 +28,12 @@ class RequestController extends Controller
     }
 
     public function getEditView(){
-        return view('editRequest');
+        // 1.lay thong tin của request
+        // 2.fill vào view -> return view('editRequest', $data);
+        $teams = Team::all();
+        $data['teams'] = $teams;
+        return view('editRequest',$data);
+
     }
 
     /**
@@ -47,7 +52,44 @@ class RequestController extends Controller
             'content' => 'required|string',
         ]);
     }
+    protected function editValidator(array $data){
+        return Validator::make($data,[
+            'priority' => 'required|int|min:1|max:6',
+            'deadline' => 'required|date',
+            'team' => 'required',
+            'status' => 'required',
+        ]);
+    }
+    public function editRequest(Request $request){
+        $data =$request->all();
+        $this ->editValidator($data)->validate();
+        $this->edit($data);
+    }
 
+    protected function edit(array $data,$id){
+        $news = Request::find($id);
+        if($news->priority != $data['priority']){
+            $news->priority = $data['priority'];
+        }
+        if($news->deadline != $data['deadline']){
+            $news->deadline = $data['deadline'];
+        }
+        if($news->assigned_to != $data['assigned_to']){
+            $news->assigned_to = $data['assigned_to'];
+        }
+        if($news->team_id != $data['team']){
+            $news->team_id = $data['team'];
+        }
+        if($news->status != $data['status']){
+            $news->status = $data['status'];
+        }
+        $news->save();
+        //thay doi nguoi lien quan
+//        if($news->relater != $data['team']){
+//            $news->team = $data['team'];
+//        }
+
+    }
     public function createRequest(Request $request)
     {
         $data = $request->all();
