@@ -19,11 +19,14 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+
 Route::get('createRequest', 'RequestController@getCreateView');
 Route::post('createRequest',
     ['as' => 'createRequest',
      'uses' => 'RequestController@createRequest'
 ]);
+
+Route::get('filter/{kindOfRequests?}/{status?}', 'RequestFilterController@myRequest');
 
 Route::get('editRequest', 'RequestController@getEditView');
 

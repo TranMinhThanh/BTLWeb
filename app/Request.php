@@ -25,6 +25,14 @@ class Request extends Model
     }
 
     /*
+     * Trả về team cần hoàn thành công việc
+     * @return Team
+     */
+    public function team(){
+        return $this->belongsTo(Team::class,'team_id');
+    }
+
+    /*
      * Trả về tên công việc
      * @return string
      */

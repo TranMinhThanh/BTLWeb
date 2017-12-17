@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Team;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -53,9 +54,15 @@ class RequestController extends Controller
         $data = $request->all();
         $this->validator($data)->validate();
         $this->create($data);
+        if (!emptyArray($data['relater'])){
+            foreach ($data['relater'] as $relater)
+                RelaterController::create($this->id,$relater);
+        }
+
     }
 
     public function create(array $data){
+//        if ($data['relater'].)
         return \App\Request::create([
             'title' => $data['title'],
             'create_by' => Auth::id(),
