@@ -65,4 +65,15 @@ class Request extends Model
     public function status(){
         return $this->status;
     }
+    //nguoi lien quan
+    public function relater(){
+        return $this->belongsToMany('App\User','relaters','request_id','user_id')->withPivot('id');
+    }
+    //comment
+    // phan 2 with can xem xet lai
+    public function comment(){
+        return $this->belongsToMany('App\User','threads','request_id','user_id')->withPivot('id','content','type','note')->withTimestamps();
+    }
 }
+
+

@@ -25,56 +25,75 @@
                 <div class="row">
                     {{--can them action vào form--}}
                     {{--them gia trị ban dau cua cac form--}}
+
                     <form action="" method="post" id="editForm">
                     <div class="col-md-6">
                         <label class="col-md-5" id="createDate">Ngày tạo:</label>
-                        {{--<span class="col-md-7">{{$request->ngaytao}}</span>--}}
                         <span class="col-md-7">jfhfdfkjhksdhf</span>
+                        {{--<span class="col-md-7">{{$request->timestamp('create_on')}}</span>--}}
+
                     </div>
                     <div class="col-md-6">
                         <label class="col-md-5">Ngày hết hạn:</label>
                         <span class="col-md-7">jfhfdfkjhksdhf</span>
+                        <input id="deadline" type= 'date' name="deadline" class="form-control col-md-7" placeholder="old dateline"/>
+
                         {{--<span class="col-md-7">{{$request->deadline}}</span>--}}
-                        {{--<input id="deadline" type= 'date' name="deadline" class="form-control col-md-7 "/>--}}
-                        <form >
-                            <input id="deadline" type= 'date' name="deadline" class="form-control col-md-7"/>
-                        </form>
+                        {{--<input id="deadline" type= 'date' name="deadline" class="form-control col-md-7 value={{$request->deadline}} placeholder={{$request->deadline}}>--}}
+
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
                         <label class="col-md-5" id="createBy">Người yêu cầu:</label>
-                        {{--<span class="col-md-7">{{$request->create_by}}</span>--}}
                         <span class="col-md-7">jfhfdfkjhksdhf</span>
+                        {{--<span class="col-md-7">{{$request->create_by}}</span>--}}
+
                     </div>
                     <div class="col-md-6">
                         <label class="col-md-5">Người thực hiện:</label>
                         <span class="col-md-7">jfhfdfkjhksdhf</span>
-                        {{--<span class="col-md-7">{{$request->assigned_to}}</span>--}}
-                        <input id="assigned_to" class="form-control col-md-7" type="text">
+                        <input id="assigned_to" class="form-control col-md-7" type="text" >
+                        {{--<span class="col-md-7">{{$request->create_by}}</span>--}}
+                        {{--<input id="assigned_to" class="form-control col-md-7" type="text" placeholder={{$request->assigned_to}} value={{$request->assigned_to}}>--}}
                     </div>
                 </div>
                 <div class="row ">
                     <div class="col-md-6">
                         <label class="col-md-5">Mức độ ưu tiên:</label>
-                        {{--<span class="col-md-7 hidden">{{$request->priority}}</span>--}}
                         <span class="col-md-7">jfhfdfkjhksdhf</span>
-                        <select class="form-control col-md-7" id="priority" name="priority">
-                                <option value="1">Thấp</option>
-                                <option value="2">Bình thường</option>
-                                <option value="3">Cao</option>
-                                <option value="4">Khẩn cấp</option>
+                        {{--<span class="col-md-7">{{$request->priority}}</span>--}}
+                        <select class="form-control col-md-7" id="priority" name="priority" >
+                            <option value="1">{{env('priorty.1')}}</option>
+                            <option value="2">{{env('priorty.2')}}</option>
+                            <option value="3">{{env('priorty.3')}}</option>
+                            <option value="4">{{env('priorty.4')}}</option>
                         </select>
+
+                        {{--<select class="form-control col-md-7" id="priority" name="priority" value={{$request->priority}}>--}}
+                            {{--<option value="1">{{env('priorty.1')}}</option>--}}
+                            {{--<option value="2">{{env('priorty.2')}}</option>--}}
+                            {{--<option value="3">{{env('priorty.3')}}</option>--}}
+                            {{--<option value="4">{{env('priorty.4')}}</option>--}}
+                        {{--</select>--}}
+
                     </div>
                     <div class="col-md-6">
                         <label class="col-md-5">Trạng thái:</label>
                         <span class="col-md-7">jfhfdfkjhksdhf</span>
+
                         {{--<span class="col-md-7">{{$request->status}}</span>--}}
                         <select class="form-control col-md-7" id="status" name="status">
-                            <option value="1">New</option>
-                            <option value="2">Close</option>
-                            <option value="3">Resolve</option>
+                            <option value="1">{{env('status.1')}}</option>
+                            <option value="2">{{env('status.2')}}</option>
+                            <option value="3">{{env('status.3')}}</option>
+                            <option value="4">{{env('status.4')}}</option>
                         </select>
+                        {{--<select class="form-control col-md-7" id="status" name="status" value={{$request->status}}>--}}
+                            {{--<option value="1">New</option>--}}
+                            {{--<option value="2">Close</option>--}}
+                            {{--<option value="3">Resolve</option>--}}
+                        {{--</select>--}}
                     </div>
                 </div>
                 <div class="row">
@@ -88,7 +107,6 @@
                             foreach($teams as $team){
                             ?>
                             <option value="{{ $team->id }}"> {{ $team->name }} </option>
-                            {{--@foreach()--}}
                             <?php
                             }
                             ?>
@@ -97,14 +115,21 @@
                     <div class="col-md-6">
                         <label class="col-md-5">Người liên quan</label>
                         <span class="col-md-7">jfhfdfkjhksdhf</span>
-                        <!-- tao nguoi lien quan theo list co cuon-->
                         {{--<span class="col-md-7">{{$relaters->name}}</span>--}}
+
+                        {{--tao nguoi lien quan theo list co cuon --}}
+                        {{--c1: dung select voi thuoc tinh size--}}
+                        {{--c2: dung danh sach goi y--}}
+
                         <input id="relater" class="form-control col-md-7" type="text">
+
+                        {{--<input id="relater" class="form-control col-md-7" type="text" value = {{$request->relater}} placeholder={{$request->relater}}>--}}
+
                     </div>
                 </div>
                     <div class="btn-toolbar col-md-3 pull-right">
-                    <button type="button" class="btn-primary" style="margin-top: 5px" id="save" onclick="save()">save</button>
-                    <button type="button" class="btn-primary " style="margin-top: 5px" id="cancel" onclick="cancel()">cancel</button>
+                    <button type="button" class="btn-primary" style="margin-top: 5px" id="save" onclick= "save()">save</button>
+                    <button type="button" class="btn-primary " style="margin-top: 5px" id="cancel" onclick= "cancel()">cancel</button>
                     </div>
                 </form>
             </div>
@@ -127,8 +152,8 @@
                     </ul>
                 </div>
                 <div >
-                    <form>
-                        <textarea type="text" class="form-control" id="requestContent" rows = '10' ></textarea>
+                    <form id="comment">
+                        <textarea type="text" class="form-control" id="requestContent" rows = '10' name="comment" ></textarea>
                         {{ csrf_field() }}
                     </form>
                 </div>
@@ -146,15 +171,18 @@
         $('#save').hide();
         $('#cancel').hide();
     </script>
+
     <script type="text/javascript">
+
         function edit(id){
-            //$(id).prev().hide();
+            $(id).prev().hide();
             $(id).show();
             $('#save').show();
             $('#cancel').show();
-            $(id).val($(id).prev().val());
+
         }
         function cancel(){
+            // an phan chinh sua
             $('#priority').hide();
             $('#deadline').hide();
             $('#team').hide();
@@ -163,40 +191,29 @@
             $('#status').hide();
             $('#save').hide();
             $('#cancel').hide();
-            // $('#priority').prev().show();
-            // $('#deadline').prev().show();
-            // $('#team').prev().show();
-            // $('#assigned_to').prev().show();
-            // $('#relater').prev().show();
-            // $('#status').prev().show();
+            //thiet lap lai gia tri ban dau:
+            {{--$('#priority').val({{$request->priority}});--}}
+            {{--$('#deadline').val({{$request->deadline}});--}}
+            {{--$('#team').val({{$request->team_id}});--}}
+            {{--$('#assigned_to').val({{$request->assigned_to}});--}}
+            {{--$('#relater').val({{$request->relater}});--}}
+            {{--$('#status').val({{$request->status}});--}}
+            //hien thi lai gia tri cu
+            $('#priority').prev().show();
+            $('#deadline').prev().show();
+            $('#team').prev().show();
+            $('#assigned_to').prev().show();
+            $('#relater').prev().show();
+            $('#status').prev().show();
         }
         function save(){
             if(confirm("Bạn có thực sự muốn lưu không?")){
                 $('#editForm').submit();
-                location.reload();
-                var prio =["Thấp","Bình thường","Cao","Khẩn cấp"];
-                prioUpdate = $('#priority').val();
-                //    document.write(status[statusUpdate-1]);
-                if(prioUpdate != "") {
-                    $('#priority').prev().html(prio[prioUpdate - 1]);
-                }
-                if($('#deadline').val() != "") {
-                    $('#deadline').prev().html($('#deadline').val());
-                }
-                if($('#team').val() !="") {
-                    $('#team').prev().html($('#team').val());
-                }
-                if($('#assigned_to').val() != "") {
-                    $('#assigned_to').prev().html($('#assigned_to').val());
-                }
-                if($('#relater').val()) {
-                    $('#relater').prev().html($('#relater').val());
-                }
-                var status=["New","Close","Resolve"];
-                var statusUpdate=$('#priority').val();
-
-                $('#status').prev().html(status[statusUpdate-1]);
+              //  location.reload();
             }
+        }
+        function comment(){
+            $('#comment').submit();
         }
     </script>
 @endsection

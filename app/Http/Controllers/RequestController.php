@@ -61,10 +61,10 @@ class RequestController extends Controller
             'status' => 'required',
         ]);
     }
-    public function editRequest(Request $request){
+    public function editRequest(Request $request,$id){
         $data =$request->all();
         $this ->editValidator($data)->validate();
-        $this->edit($data);
+        $this->edit($data,$id);
     }
 
     protected function edit(array $data,$id){
@@ -84,11 +84,19 @@ class RequestController extends Controller
         if($news->status != $data['status']){
             $news->status = $data['status'];
         }
+        //cap nhat bang trung gian
+        $news->relater()->sync($data['relater']);
         $news->save();
-        //thay doi nguoi lien quan
-//        if($news->relater != $data['team']){
-//            $news->team = $data['team'];
-//        }
+        if (!emptyArray($data['relater'])){
+            foreach ($data['relater'] as $relater) {
+                $email = User::find($relater)->email;
+                // can bo sung them content
+                Mail::send('Notifi.mailNotifi', array('type' => env('typeNotifi.2'), 'person' => Auth::name(), 'name' => $news->title, 'content' => ""), function ($msg) use($email) {
+                    $msg->from('btlweb.uet@gmail.com', 'btlweb');
+                    $msg->to($email, env('typeNotifi.1'));
+                });
+            }
+        }
 
     }
     public function createRequest(Request $request)
@@ -97,9 +105,22 @@ class RequestController extends Controller
         $this->validator($data)->validate();
         $this->create($data);
         if (!emptyArray($data['relater'])){
-            foreach ($data['relater'] as $relater)
-                RelaterController::create($this->id,$relater);
+            foreach ($data['relater'] as $relater) {
+                RelaterController::create($this->id, $relater);
+                $email = User::find($relater)->email;
+                Mail::send('Notifi.mailNotifi', array('type' => env('typeNotifi.1'), 'person' => Auth::name(), 'name' => $data['title'], 'content' => $data['content']), function ($msg) use($email) {
+                    $msg->from('btlweb.uet@gmail.com', 'btlweb');
+                    $msg->to($email, env('typeNotifi.1'));
+                });
+            }
         }
+
+        // mail cho ca nguoi tao request
+        $user = Auth::email();
+        Mail::send('Notifi.mailNotifi',array('type'=>env('typeNotifi.1'), 'person'=>Auth::name(),'name'=>$data['title'],'content'=>""),function($msg) use($user){
+            $msg->from('btlweb.uet@gmail.com','btlweb');
+            $msg->to($user,env('typeNotifi.1'));
+    });
 
     }
 
@@ -114,5 +135,22 @@ class RequestController extends Controller
             'deadline' => $data['deadline'],
             'team_id' => $data['team'],
         ]);
+    }
+    public function comment(Request $request, $id){
+        $comment = $request->all();
+        $requestOfComment = Request::find($id);
+        // can them note va type
+        $requestOfComment->comment()->attach(Auth::id(),['content'=>$comment['comment'],'type'=>'','note'=>'']);
+        //thong bao cho nguoi lien quan
+        $relaters = $requestOfComment->relater()->user_id;
+        if (!emptyArray($relaters)){
+            foreach ($relaters as $relater) {
+                $email = User::find($relater)->email;
+                Mail::send('Notifi.mailNotifi', array('type' => env('typeNotifi.3'), 'person' => Auth::name(), 'name' => $requestOfComment->title, 'content' => $comment['comment']), function ($msg) use($email) {
+                    $msg->from('btlweb.uet@gmail.com', 'btlweb');
+                    $msg->to($email, env('typeNotifi.3'));
+                });
+            }
+        }
     }
 }

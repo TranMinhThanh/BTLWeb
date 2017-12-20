@@ -58,7 +58,7 @@
                 ?>
 
             <div class="panel panel-default">
-                <div id ="{{ 'menuHeading'.$i }}" class="panel-heading" data-toggle="collapse" data-target ="{{ '#menu'.$i }}" onclick="open_close({{ '#menuHeading'.$i }})">
+                <div id ="{{ 'menuHeading'.$i }}" class="panel-heading" data-toggle="collapse" data-target ="{{ '#menu'.$i }}" onclick="open_close('{{'#menuHeading'.$i}}')">
                     <label>{{ env(env('request.'.$i).'.label') }}</label>
                     <span  class ="pull-right glyphicon glyphicon-minus"></span>
                 </div>
@@ -103,7 +103,7 @@
         var str = imgChild.attr("class");
         if(str.search("glyphicon-minus") != -1){
             str = str.replace('glyphicon-minus','glyphicon-plus');
-            // document.write(str);
+            //document.write(str);
             imgChild.attr("class",str);
         }
         else{
