@@ -46,7 +46,7 @@
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for ='team' class="control-label">Bộ phận IT</label>
-                        <select class="form-control" id="team" name="team" value="1">
+                        <select class="form-control" id="team" name="team">
                             <?php
                                 foreach($teams as $team){
                             ?>

@@ -27,6 +27,7 @@ class RequestEditController extends RequestController
         // 1.lay thong tin của request
         // 2.fill vào view -> return view('editRequest', $data);
         $teams = Team::all();
+      //  $data  = Request::find();
         $data['teams'] = $teams;
         return view('editRequest',$data);
 
@@ -59,9 +60,9 @@ class RequestEditController extends RequestController
             $oldRelaters = Relater::where('user-id', $id)->delete();
             foreach ($data['relater'] as $relater) {
                 Relater::creat([$id,$relater]);
-                // can bo sung them content
-                Mail::send('Notifi.mailNotifi', array('type' => env('typeNotifi.2'), 'person' => Auth::name(), 'name' => $news->title, 'content' => ""), function ($msg) use($email) {
-                    $msg->from('btlweb.uet@gmail.com', 'btlweb');
+                $email = User::find($relater)->email;
+                Mail::send('Notifi.mailNotifi', array('type' => env('typeNotifi.1'), 'person' => Auth::user()->name, 'name' => $data['title'], 'content' => $data['content']), function ($msg) use($email) {
+                    $msg->from(env('MAIL_USERNAME'), 'btlweb');
                     $msg->to($email, env('typeNotifi.1'));
                 });
             }

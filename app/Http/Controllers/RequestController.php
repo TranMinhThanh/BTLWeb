@@ -54,43 +54,6 @@ class RequestController extends Controller
             'content' => 'required|string',
         ]);
     }
-    protected function editValidator(array $data){
-        return Validator::make($data,[
-            'priority' => 'required|int|min:1|max:6',
-            'deadline' => 'required|date',
-            'team' => 'required',
-            'status' => 'required',
-        ]);
-    }
-    public function editRequest(Request $request,$id){
-        $data =$request->all();
-        $this ->editValidator($data)->validate();
-        $this->edit($data,$id);
-    }
-
-    protected function edit(array $data,$id){
-        $news = Request::find($id);
-        $news->priority = $data['priority'];
-        $news->deadline = $data['deadline'];
-        $news->assigned_to = $data['assigned_to'];
-        $news->team_id = $data['team'];
-        $news->status = $data['status'];
-        //cap nhat bang trung gian
-       // $news->relater()->sync($data['relater']);
-        $news->save();
-        if (!emptyArray($data['relater'])){
-            $oldRelaters = Relater::where('user-id', $id)->delete();
-            foreach ($data['relater'] as $relater) {
-                Relater::creat([$id,$relater]);
-                // can bo sung them content
-                Mail::send('Notifi.mailNotifi', array('type' => env('typeNotifi.2'), 'person' => Auth::name(), 'name' => $news->title, 'content' => ""), function ($msg) use($email) {
-                    $msg->from('btlweb.uet@gmail.com', 'btlweb');
-                    $msg->to($email, env('typeNotifi.1'));
-                });
-            }
-        }
-
-    }
     public function createRequest(Request $request)
     {
         $data = $request->all();
