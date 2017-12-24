@@ -1,10 +1,8 @@
 @extends('layout')
 @section('child_head')
-
     <link rel="stylesheet" href={{ asset('css/ajax/libs/jqueryui/jquery-ui.css') }}>
     <script src= {{ asset('js/ajax/libs/jquery/jquery.min.js') }}></script>
     <script src= {{ asset('js/ajax/libs/jqueryui/jquery-ui.min.js') }}></script>
-
 @endsection
 
 @section('child_content')
@@ -22,115 +20,112 @@
                 </div>
             </div>
             <div class="panel-body">
-                <div class="row">
+                <form action="" method="post" id="editForm">
+                    <div class="row">
                     {{--can them action vào form--}}
                     {{--them gia trị ban dau cua cac form--}}
+                        <div class="col-md-6">
+                            <label class="col-md-5" id="createDate">Ngày tạo:</label>
+                            <span class="col-md-7">jfhfdfkjhksdhf</span>
+                            {{--<span class="col-md-7">{{$request->timestamp('create_on')}}</span>--}}
 
-                    <form action="" method="post" id="editForm">
-                    <div class="col-md-6">
-                        <label class="col-md-5" id="createDate">Ngày tạo:</label>
-                        <span class="col-md-7">jfhfdfkjhksdhf</span>
-                        {{--<span class="col-md-7">{{$request->timestamp('create_on')}}</span>--}}
-
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-5">Ngày hết hạn:</label>
+                            <span class="col-md-7">jfhfdfkjhksdhf</span>
+                            <input id="deadline" type= 'date' name="deadline" class="form-control col-md-7" placeholder="old dateline"/>
+                            {{--<span class="col-md-7">{{$request->deadline}}</span>--}}
+                            {{--<input id="deadline" type= 'date' name="deadline" class="form-control col-md-7 value={{$request->deadline}} placeholder={{$request->deadline}}>--}}
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <label class="col-md-5">Ngày hết hạn:</label>
-                        <span class="col-md-7">jfhfdfkjhksdhf</span>
-                        <input id="deadline" type= 'date' name="deadline" class="form-control col-md-7" placeholder="old dateline"/>
-
-                        {{--<span class="col-md-7">{{$request->deadline}}</span>--}}
-                        {{--<input id="deadline" type= 'date' name="deadline" class="form-control col-md-7 value={{$request->deadline}} placeholder={{$request->deadline}}>--}}
-
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="col-md-5" id="createBy">Người yêu cầu:</label>
+                            <span class="col-md-7">jfhfdfkjhksdhf</span>
+                            {{--<span class="col-md-7">{{$request->create_by}}</span>--}}
+    
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-5">Người thực hiện:</label>
+                            <span class="col-md-7">jfhfdfkjhksdhf</span>
+                            <input id="assigned_to" class="form-control col-md-7" type="text" >
+                            {{--<span class="col-md-7">{{$request->create_by}}</span>--}}
+                            {{--<input id="assigned_to" class="form-control col-md-7" type="text" placeholder={{$request->assigned_to}} value={{$request->assigned_to}}>--}}
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <label class="col-md-5" id="createBy">Người yêu cầu:</label>
-                        <span class="col-md-7">jfhfdfkjhksdhf</span>
-                        {{--<span class="col-md-7">{{$request->create_by}}</span>--}}
+                    <div class="row ">
+                        <div class="col-md-6">
+                            <label class="col-md-5">Mức độ ưu tiên:</label>
+                            <span class="col-md-7">jfhfdfkjhksdhf</span>
+                            {{--<span class="col-md-7">{{$request->priority}}</span>--}}
+                            <select class="form-control col-md-7" id="priority" name="priority" >
+                                <option value="1">{{env('priority.1')}}</option>
+                                <option value="2">{{env('priority.2')}}</option>
+                                <option value="3">{{env('priority.3')}}</option>
+                                <option value="4">{{env('priority.4')}}</option>
+                            </select>
 
+                            {{--<select class="form-control col-md-7" id="priority" name="priority" value={{$request->priority}}>--}}
+                                {{--<option value="1">{{env('priorty.1')}}</option>--}}
+                                {{--<option value="2">{{env('priorty.2')}}</option>--}}
+                                {{--<option value="3">{{env('priorty.3')}}</option>--}}
+                                {{--<option value="4">{{env('priorty.4')}}</option>--}}
+                            {{--</select>--}}
+
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-5">Trạng thái:</label>
+                            <span class="col-md-7">jfhfdfkjhksdhf</span>
+
+                            {{--<span class="col-md-7">{{$request->status}}</span>--}}
+                            <select class="form-control col-md-7" id="status" name="status">
+                                <option value="1">{{env('status.1')}}</option>
+                                <option value="2">{{env('status.2')}}</option>
+                                <option value="3">{{env('status.3')}}</option>
+                                <option value="4">{{env('status.4')}}</option>
+                            </select>
+                            {{--<select class="form-control col-md-7" id="status" name="status" value={{$request->status}}>--}}
+                                {{--<option value="1">New</option>--}}
+                                {{--<option value="2">Close</option>--}}
+                                {{--<option value="3">Resolve</option>--}}
+                            {{--</select>--}}
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <label class="col-md-5">Người thực hiện:</label>
-                        <span class="col-md-7">jfhfdfkjhksdhf</span>
-                        <input id="assigned_to" class="form-control col-md-7" type="text" >
-                        {{--<span class="col-md-7">{{$request->create_by}}</span>--}}
-                        {{--<input id="assigned_to" class="form-control col-md-7" type="text" placeholder={{$request->assigned_to}} value={{$request->assigned_to}}>--}}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="col-md-5">Bộ phận IT:</label>
+                            <span class="col-md-7">jfhfdfkjhksdhf</span>
+                            {{--<span class="col-md-7">{{$request->team_id}}</span>--}}
+
+                            <select class="form-control col-md-7" id="team" name="team">
+                                <?php
+                                foreach($teams as $team){
+                                ?>
+                                <option value="{{ $team->id }}"> {{ $team->name }} </option>
+                                <?php
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-5">Người liên quan</label>
+                            <span class="col-md-7">jfhfdfkjhksdhf</span>
+                            {{--<span class="col-md-7">{{$relaters->name}}</span>--}}
+
+                            {{--tao nguoi lien quan theo list co cuon --}}
+                            {{--c1: dung select voi thuoc tinh size--}}
+                            {{--c2: dung danh sach goi y--}}
+
+                            <input id="relater" class="form-control col-md-7" type="text">
+
+                            {{--<input id="relater" class="form-control col-md-7" type="text" value = {{$request->relater}} placeholder={{$request->relater}}>--}}
+
+                        </div>
                     </div>
-                </div>
-                <div class="row ">
-                    <div class="col-md-6">
-                        <label class="col-md-5">Mức độ ưu tiên:</label>
-                        <span class="col-md-7">jfhfdfkjhksdhf</span>
-                        {{--<span class="col-md-7">{{$request->priority}}</span>--}}
-                        <select class="form-control col-md-7" id="priority" name="priority" >
-                            <option value="1">{{env('priorty.1')}}</option>
-                            <option value="2">{{env('priorty.2')}}</option>
-                            <option value="3">{{env('priorty.3')}}</option>
-                            <option value="4">{{env('priorty.4')}}</option>
-                        </select>
-
-                        {{--<select class="form-control col-md-7" id="priority" name="priority" value={{$request->priority}}>--}}
-                            {{--<option value="1">{{env('priorty.1')}}</option>--}}
-                            {{--<option value="2">{{env('priorty.2')}}</option>--}}
-                            {{--<option value="3">{{env('priorty.3')}}</option>--}}
-                            {{--<option value="4">{{env('priorty.4')}}</option>--}}
-                        {{--</select>--}}
-
-                    </div>
-                    <div class="col-md-6">
-                        <label class="col-md-5">Trạng thái:</label>
-                        <span class="col-md-7">jfhfdfkjhksdhf</span>
-
-                        {{--<span class="col-md-7">{{$request->status}}</span>--}}
-                        <select class="form-control col-md-7" id="status" name="status">
-                            <option value="1">{{env('status.1')}}</option>
-                            <option value="2">{{env('status.2')}}</option>
-                            <option value="3">{{env('status.3')}}</option>
-                            <option value="4">{{env('status.4')}}</option>
-                        </select>
-                        {{--<select class="form-control col-md-7" id="status" name="status" value={{$request->status}}>--}}
-                            {{--<option value="1">New</option>--}}
-                            {{--<option value="2">Close</option>--}}
-                            {{--<option value="3">Resolve</option>--}}
-                        {{--</select>--}}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <label class="col-md-5">Bộ phận IT:</label>
-                        <span class="col-md-7">jfhfdfkjhksdhf</span>
-                        {{--<span class="col-md-7">{{$request->team_id}}</span>--}}
-
-                        <select class="form-control col-md-7" id="team" name="team">
-                            <?php
-                            foreach($teams as $team){
-                            ?>
-                            <option value="{{ $team->id }}"> {{ $team->name }} </option>
-                            <?php
-                            }
-                            ?>
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="col-md-5">Người liên quan</label>
-                        <span class="col-md-7">jfhfdfkjhksdhf</span>
-                        {{--<span class="col-md-7">{{$relaters->name}}</span>--}}
-
-                        {{--tao nguoi lien quan theo list co cuon --}}
-                        {{--c1: dung select voi thuoc tinh size--}}
-                        {{--c2: dung danh sach goi y--}}
-
-                        <input id="relater" class="form-control col-md-7" type="text">
-
-                        {{--<input id="relater" class="form-control col-md-7" type="text" value = {{$request->relater}} placeholder={{$request->relater}}>--}}
-
-                    </div>
-                </div>
-                    <div class="btn-toolbar col-md-3 pull-right">
-                    <button type="button" class="btn-primary" style="margin-top: 5px" id="save" onclick= "save()">save</button>
-                    <button type="button" class="btn-primary " style="margin-top: 5px" id="cancel" onclick= "cancel()">cancel</button>
-                    </div>
+                        <div class="btn-toolbar col-md-3 pull-right">
+                        <button type="button" class="btn-primary" style="margin-top: 5px" id="save" onclick= "save()">save</button>
+                        <button type="button" class="btn-primary " style="margin-top: 5px" id="cancel" onclick= "cancel()">cancel</button>
+                        </div>
                 </form>
             </div>
         </div>
