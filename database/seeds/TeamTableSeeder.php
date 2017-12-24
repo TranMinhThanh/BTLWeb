@@ -1,9 +1,9 @@
 <?php
-//use App\Team;
-use Illuminate\Database\Seeder;
-//use App\Team;
 
-class team extends Seeder
+use Illuminate\Database\Seeder;
+use App\Team;
+
+class TeamTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,9 +12,9 @@ class team extends Seeder
      */
     public function run()
     {
-        $this->call(\App\Team);
-        App\Team::create(
-            [
+       // $this->call(Team);
+        Team:: create(
+         [
                 'name' => 'IT Hà Nội'
             ],
             [

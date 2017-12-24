@@ -46,7 +46,7 @@
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for ='team' class="control-label">Bộ phận IT</label>
-                        <select class="form-control" id="team" name="team">
+                        <select class="form-control" id="team" name="team" value="1">
                             <?php
                                 foreach($teams as $team){
                             ?>
@@ -85,7 +85,7 @@
 
                 <div class="form-group">
                     <div class="col-md-6 col-md-offset-4">
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary" onclick="submit()">
                             Submit
                         </button>
                         <button type="button" class="btn btn-primary">
@@ -101,7 +101,10 @@
 @section('script')
     <script>
         $(document).ready(function() {
-            $("#deadline").datepicker();
+            //$("#deadline").datepicker();
+            function submit() {
+                $("#requestForm").submit();
+            }
         });
     </script>
 @endsection

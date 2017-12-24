@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Relater;
 use App\Team;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Tests\TestCase;
-
+use Mail;
 class RequestController extends Controller
 {
     //
@@ -69,27 +70,18 @@ class RequestController extends Controller
 
     protected function edit(array $data,$id){
         $news = Request::find($id);
-        if($news->priority != $data['priority']){
-            $news->priority = $data['priority'];
-        }
-        if($news->deadline != $data['deadline']){
-            $news->deadline = $data['deadline'];
-        }
-        if($news->assigned_to != $data['assigned_to']){
-            $news->assigned_to = $data['assigned_to'];
-        }
-        if($news->team_id != $data['team']){
-            $news->team_id = $data['team'];
-        }
-        if($news->status != $data['status']){
-            $news->status = $data['status'];
-        }
+        $news->priority = $data['priority'];
+        $news->deadline = $data['deadline'];
+        $news->assigned_to = $data['assigned_to'];
+        $news->team_id = $data['team'];
+        $news->status = $data['status'];
         //cap nhat bang trung gian
-        $news->relater()->sync($data['relater']);
+       // $news->relater()->sync($data['relater']);
         $news->save();
         if (!emptyArray($data['relater'])){
+            $oldRelaters = Relater::where('user-id', $id)->delete();
             foreach ($data['relater'] as $relater) {
-                $email = User::find($relater)->email;
+                Relater::creat([$id,$relater]);
                 // can bo sung them content
                 Mail::send('Notifi.mailNotifi', array('type' => env('typeNotifi.2'), 'person' => Auth::name(), 'name' => $news->title, 'content' => ""), function ($msg) use($email) {
                     $msg->from('btlweb.uet@gmail.com', 'btlweb');
@@ -114,10 +106,9 @@ class RequestController extends Controller
                 });
             }
         }
-
         // mail cho ca nguoi tao request
-        $user = Auth::email();
-        Mail::send('Notifi.mailNotifi',array('type'=>env('typeNotifi.1'), 'person'=>Auth::name(),'name'=>$data['title'],'content'=>""),function($msg) use($user){
+        $user = Auth::user()->email;
+        Mail::send('Notifi.mailNotifi',array('type'=>env('typeNotifi.1'), 'person'=>Auth::user()->name ,'name'=>$data['title'],'content'=>""),function($msg) use($user){
             $msg->from('btlweb.uet@gmail.com','btlweb');
             $msg->to($user,env('typeNotifi.1'));
     });
@@ -126,7 +117,7 @@ class RequestController extends Controller
 
     public function create(array $data){
 //        if ($data['relater'].)
-        return \App\Request::create([
+        \App\Request::create([
             'title' => $data['title'],
             'create_by' => Auth::id(),
             'content' => $data['content'],
@@ -135,6 +126,7 @@ class RequestController extends Controller
             'deadline' => $data['deadline'],
             'team_id' => $data['team'],
         ]);
+      //  protected $redirectTo = '/createRequest';
     }
     public function comment(Request $request, $id){
         $comment = $request->all();
