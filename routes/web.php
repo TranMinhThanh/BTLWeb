@@ -19,8 +19,8 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-
 Route::get('createRequest', 'RequestController@getCreateView');
+
 Route::post('createRequest',
     ['as' => 'createRequest',
      'uses' => 'RequestController@createRequest'
@@ -33,4 +33,5 @@ Route::get('editRequest/{id}', 'RequestEditController@getEditView');
 Route::get('/filter', function () {
     return view('filter');
 });
-//Router::get('user/{userId}','');
+Route::get("/userInfo", 'UserController@getProfile');
+Route::get('search/autocomplete', 'SearchController@autocomplete');

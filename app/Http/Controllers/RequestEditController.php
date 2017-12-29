@@ -59,13 +59,17 @@ class RequestEditController extends RequestController
         if (!emptyArray($data['relater'])){
             $oldRelaters = Relater::where('user-id', $id)->delete();
             foreach ($data['relater'] as $relater) {
-                Relater::creat([$id,$relater]);
-                $email = User::find($relater)->email;
-                Mail::send('Notifi.mailNotifi', array('type' => env('typeNotifi.1'), 'person' => Auth::user()->name, 'name' => $data['title'], 'content' => $data['content']), function ($msg) use($email) {
+                    // sử lý để lấy user_id của người liên quan VD a[id]
+                    $item = explode($relater,"["); //-> item[1]= "id]"
+                    $relater_id = explode($item[1],"]"); //-> realter_id[0]=id
+
+                    RelaterController::create($this->id, $relater_id[0]);
+                    $email = User::find($relater_id[0])->email;
+                    Mail::send('Notifi.mailNotifi', array('type' => env('typeNotifi.1'), 'person' => Auth::user()->name, 'name' => $data['title'], 'content' => $data['content']), function ($msg) use($email) {
                     $msg->from(env('MAIL_USERNAME'), 'btlweb');
                     $msg->to($email, env('typeNotifi.1'));
-                });
+                    });
+                }
             }
-        }
     }
 }

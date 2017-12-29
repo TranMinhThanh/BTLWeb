@@ -1,5 +1,4 @@
 @extends('layout')
-
 @section('child_head')
     <link rel="stylesheet" href="{{asset('css/bootstrap.css')}}">
     <link rel="stylesheet" href={{ asset('css/ajax/libs/jqueryui/jquery-ui.css') }}>
@@ -7,7 +6,6 @@
     <script src= {{ asset('js/ajax/libs/jqueryui/jquery-ui.min.js') }}></script>
 
 @endsection
-
 @section('child_content')
     <div id='contentRequest' class="panel panel-default" style="margin-top: 5%">
         <div class="panel panel-heading">
@@ -60,7 +58,7 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label for ='relater' class="control-label">Người liên quan</label>
-                        <input type="text" name="relater" id ="relater" class="form-control">
+                        <input type="text" name="relater" id ="relater" class="form-control" >
                     </div>
                 </div>
 
@@ -97,9 +95,47 @@
         </div>
         </div>
     </div>
+    <script type="text/javascript">
+        $( "#relater")
+            .on("keydown", function( event ) {
+                if ( event.keyCode === 9 &&
+                    $(this).autocomplete( "instance" ).menu.active ) {
+                    event.preventDefault();
+                }
+            })
+            .autocomplete({
+                source: function( request, response ) {
+                    $.getJSON( "{{url('search/autocomplete')}}", {
+                        term: extractLast( request.term )
+                    }, response );
+                },
+                focus: function() {
+                    // prevent value inserted on focus
+                    return false;
+                },
+                select: function( event, ui ) {
+                    var terms = split( this.value );
+                    // remove the current input
+                    terms.pop();
+                    // add the selected item
+                    terms.push( ui.item.value );
+                    // add placeholder to get the comma-and-space at the end
+                    terms.push( "" );
+                    this.value = terms.join( ", " );
+                    return false;
+                }
+
+            });
+        function extractLast( term ) {
+            return split( term ).pop();
+        }
+        function split( val ) {
+            return val.split( /,\s*/ );
+        }
+    </script>
 @endsection
 @section('script')
-    <script>
+    <script type="text/javascript">
         $(document).ready(function() {
             //$("#deadline").datepicker();
             function submit() {

@@ -59,10 +59,17 @@
                                                      document.getElementById('logout-form').submit();">
                                             Logout
                                         </a>
-
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                             {{ csrf_field() }}
                                         </form>
+                                    </li>
+                                    <li>
+                                        <a href="{{url('/userInfo')}}">
+                                            Profile
+                                        </a>
+                                        {{--<form id="userInfo-form" action="{{route('userInfo')}}" method="POST" style="display: none;">--}}
+                                            {{--{{ csrf_field() }}--}}
+                                        {{--</form>--}}
                                     </li>
                                 </ul>
                             </li>

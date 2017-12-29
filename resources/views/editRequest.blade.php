@@ -1,8 +1,14 @@
 @extends('layout')
 @section('child_head')
     <link rel="stylesheet" href={{ asset('css/ajax/libs/jqueryui/jquery-ui.css') }}>
+
     <script src= {{ asset('js/ajax/libs/jquery/jquery.min.js') }}></script>
     <script src= {{ asset('js/ajax/libs/jqueryui/jquery-ui.min.js') }}></script>
+    {{--<style>--}}
+        {{--.ui-autocomplete-loading {--}}
+            {{--background: white url("images/ui-anim_basic_16x16.gif") right center no-repeat;--}}
+        {{--}--}}
+        {{--</style>--}}
 @endsection
 
 @section('child_content')
@@ -123,8 +129,8 @@
                         </div>
                     </div>
                         <div class="btn-toolbar col-md-3 pull-right">
-                        <button type="button" class="btn-primary" style="margin-top: 5px" id="save" onclick= "save()">save</button>
-                        <button type="button" class="btn-primary " style="margin-top: 5px" id="cancel" onclick= "cancel()">cancel</button>
+                        <button type="button" class="btn-primary" style="margin-top: 5px" id="save">save</button>
+                        <button type="button" class="btn-primary " style="margin-top: 5px" id="cancel" >cancel</button>
                         </div>
                 </form>
             </div>
@@ -157,6 +163,8 @@
         </div>
     </div>
     <script type="text/javascript">
+        $(document).ready(function()
+        {
         $('#priority').hide();
         $('#deadline').hide();
         $('#team').hide();
@@ -164,19 +172,58 @@
         $('#relater').hide();
         $('#status').hide();
         $('#save').hide();
+        $('#save').click(save);
         $('#cancel').hide();
-    </script>
+        $('#cancel').click(cancel);
 
-    <script type="text/javascript">
+            //sử dụng autocomplete với input có id = key
+        });
 
+        $( "#relater")
+            .on("keydown", function( event ) {
+                 if ( event.keyCode === 9 &&
+                     $(this).autocomplete( "instance" ).menu.active ) {
+                    event.preventDefault();
+                }
+            })
+            .autocomplete({
+                source: function( request, response ) {
+                    $.getJSON( "{{url('search/autocomplete')}}", {
+                        term: extractLast( request.term )
+                    }, response );
+                },
+                focus: function() {
+                    // prevent value inserted on focus
+                    return false;
+                },
+                select: function( event, ui ) {
+                    var terms = split( this.value );
+                    // remove the current input
+                    terms.pop();
+                    // add the selected item
+                    terms.push( ui.item.value );
+                    // add placeholder to get the comma-and-space at the end
+                    terms.push( "" );
+                    this.value = terms.join( ", " );
+                    return false;
+                }
+
+        });
+        function extractLast( term ) {
+            return split( term ).pop();
+        }
+        function split( val ) {
+            return val.split( /,\s*/ );
+        }
         function edit(id){
             $(id).prev().hide();
             $(id).show();
             $('#save').show();
             $('#cancel').show();
 
-        }
+        };
         function cancel(){
+            alert($("#relater").val());
             // an phan chinh sua
             $('#priority').hide();
             $('#deadline').hide();

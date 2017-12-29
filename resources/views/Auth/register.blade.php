@@ -1,5 +1,12 @@
 @extends('layouts.app')
+@section('head')
+    <style>
+        .help-block{
+            color: #c9302c;
+        }
+    </style>
 
+@endsection
 @section('content')
 <div class="container">
     <div class="row">
@@ -69,22 +76,43 @@
                                     <input name="gender" type="radio" value="0">Nữ
                             </div>
                         </div>
-
+                        @if ($errors->has('gender'))
+                            <span class="help-block" style="color: #c9302c">
+                                <strong>Vui lòng chọn trường này</strong>
+                            </span>
+                        @endif
                         <div class="form-group{{ $errors->has('level') ? 'has-error' : '' }}">
                             <label for="level" class="col-md-4 control-label">Level</label>
+                            <div class="col-md-6">
+                                <input name="level" type="radio" value="0" onclick ="disableTeam()">Normal-Member
+                                <input name="level" type="radio" value="1" onclick="enableTeam()">Member
+                                <input name="level" type="radio" value="2" onclick="enableTeam()">Sub-leader
+                                <input name="level" type="radio" value="3" onclick="enableTeam()">Leader
+                            </div>
+                            @if ($errors->has('level'))
+                                <span class="help-block">
+                                        <strong>Vui lòng chọn trường này</strong>
+                                    </span>
+                            @endif
+                        </div>
+                        <div class="form-group{{ $errors->has('team') ? 'has-error' : '' }}">
+                            <label for="team" class="col-md-4 control-label">Team</label>
 
                             <div class="col-md-6">
-                                <input name="level" type="radio" value="0">Member
-                                <input name="level" type="radio" value="1">Sub-leader
-                                <input name="level" type="radio" value="2">Leader
+                                <input name="team" type="radio" value="1">IT-Hà Nội
+                                <input name="team" type="radio" value="2">IT-Đà Nẵng
                             </div>
+                            @if ($errors->has('team'))
+                                <span class="help-block">
+                                        <strong>has-error</strong>
+                                    </span>
+                            @endif
                         </div>
-
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                             <label for="email" class="col-md-4 control-label">E-Mail Address</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
+                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required autofocus>
 
                                 @if ($errors->has('email'))
                                     <span class="help-block">
@@ -98,7 +126,7 @@
                             <label for="password" class="col-md-4 control-label">Password</label>
 
                             <div class="col-md-6">
-                                <input id="password" type="password" class="form-control" name="password" required>
+                                <input id="password" type="password" class="form-control" name="password" required autofocus>
 
                                 @if ($errors->has('password'))
                                     <span class="help-block">
@@ -128,5 +156,20 @@
             </div>
         </div>
     </div>
+    <script>
+        function disableTeam() {
+            team = document.getElementsByName("team");
+            for(i = 0; i< team.length; i++){
+                team[i].disabled = true;
+            }
+        }
+        function enableTeam(){
+            team = document.getElementsByName("team");
+            for(i = 0; i< team.length; i++){
+                team[i].disabled = false;
+            }
+        }
+    </script>
 </div>
+    
 @endsection

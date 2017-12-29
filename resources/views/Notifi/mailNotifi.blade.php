@@ -1,5 +1,5 @@
 {{--kieu thong bao tao request hay comment hay update--}}
-<?php
+
     {{$type}}
 {{--ai tao thong bao--}}
     {{$person}}

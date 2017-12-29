@@ -28,16 +28,6 @@ class RequestController extends Controller
         $data['teams'] = $teams;
         return view('createRequest',$data);
     }
-
-    public function getEditView(){
-        // 1.lay thong tin của request
-        // 2.fill vào view -> return view('editRequest', $data);
-        $teams = Team::all();
-        $data['teams'] = $teams;
-        return view('editRequest',$data);
-
-    }
-
     /**
      * Get a validator for an incoming registration request.
      *
@@ -57,12 +47,19 @@ class RequestController extends Controller
     public function createRequest(Request $request)
     {
         $data = $request->all();
+
         $this->validator($data)->validate();
         $this->create($data);
         if (!emptyArray($data['relater'])){
+            dd($data['relater']);
             foreach ($data['relater'] as $relater) {
-                RelaterController::create($this->id, $relater);
-                $email = User::find($relater)->email;
+                dd($relater);
+                // sử lý để lấy user_id của người liên quan VD a[id]
+                $item = explode($relater,"["); //-> item[1]= "id]"
+                $relater_id = explode($item[1],"]"); //-> realter_id[0]=id
+                dump($relater_id);
+                RelaterController::create($this->id, $relater_id[0]);
+                $email = User::find($relater_id[0])->email;
                 Mail::send('Notifi.mailNotifi', array('type' => env('typeNotifi.1'), 'person' => Auth::name(), 'name' => $data['title'], 'content' => $data['content']), function ($msg) use($email) {
                     $msg->from('btlweb.uet@gmail.com', 'btlweb');
                     $msg->to($email, env('typeNotifi.1'));
