@@ -23,12 +23,15 @@ class RequestEditController extends RequestController
      *
      * @return void
      */
-    public function getEditView(){
+    public function getEditView(request $request){
         // 1.lay thong tin của request
         // 2.fill vào view -> return view('editRequest', $data);
-        $teams = Team::all();
-      //  $data  = Request::find();
-        $data['teams'] = $teams;
+//        $teams = Team::all();
+        $rq  = \App\Request::find($request->id);
+        $rq->load('create_by');
+        $rq->load('assign_to');
+        $rq->load('team');
+        $data['request'] = $rq;
         return view('editRequest',$data);
 
     }

@@ -26,13 +26,13 @@
                     {{--them gia trị ban dau cua cac form--}}
                         <div class="col-md-6">
                             <label class="col-md-5" id="createDate">Ngày tạo:</label>
-                            <span class="col-md-7">jfhfdfkjhksdhf</span>
+                            <span class="col-md-7">{{ $request->created_at }}</span>
                             {{--<span class="col-md-7">{{$request->timestamp('create_on')}}</span>--}}
 
                         </div>
                         <div class="col-md-6">
                             <label class="col-md-5">Ngày hết hạn:</label>
-                            <span class="col-md-7">jfhfdfkjhksdhf</span>
+                            <span class="col-md-7">{{ $request->deadline }}</span>
                             <input id="deadline" type= 'date' name="deadline" class="form-control col-md-7" placeholder="old dateline"/>
                             {{--<span class="col-md-7">{{$request->deadline}}</span>--}}
                             {{--<input id="deadline" type= 'date' name="deadline" class="form-control col-md-7 value={{$request->deadline}} placeholder={{$request->deadline}}>--}}
@@ -41,13 +41,13 @@
                     <div class="row">
                         <div class="col-md-6">
                             <label class="col-md-5" id="createBy">Người yêu cầu:</label>
-                            <span class="col-md-7">jfhfdfkjhksdhf</span>
+                            <span class="col-md-7">{{ $request['relations']['create_by']->name }}</span>
                             {{--<span class="col-md-7">{{$request->create_by}}</span>--}}
     
                         </div>
                         <div class="col-md-6">
                             <label class="col-md-5">Người thực hiện:</label>
-                            <span class="col-md-7">jfhfdfkjhksdhf</span>
+                            <span class="col-md-7">{{ $request['relations']['assign_to'] == null ? '' : $request['relations']['assign_to']->name }}</span>
                             <input id="assigned_to" class="form-control col-md-7" type="text" >
                             {{--<span class="col-md-7">{{$request->create_by}}</span>--}}
                             {{--<input id="assigned_to" class="form-control col-md-7" type="text" placeholder={{$request->assigned_to}} value={{$request->assigned_to}}>--}}
@@ -56,7 +56,7 @@
                     <div class="row ">
                         <div class="col-md-6">
                             <label class="col-md-5">Mức độ ưu tiên:</label>
-                            <span class="col-md-7">jfhfdfkjhksdhf</span>
+                            <span class="col-md-7">{{ env('priority.' . $request->priority)}}</span>
                             {{--<span class="col-md-7">{{$request->priority}}</span>--}}
                             <select class="form-control col-md-7" id="priority" name="priority" >
                                 <option value="1">{{env('priority.1')}}</option>
@@ -75,7 +75,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="col-md-5">Trạng thái:</label>
-                            <span class="col-md-7">jfhfdfkjhksdhf</span>
+                            <span class="col-md-7">{{ env('status.' . $request->status) }}</span>
 
                             {{--<span class="col-md-7">{{$request->status}}</span>--}}
                             <select class="form-control col-md-7" id="status" name="status">
@@ -94,18 +94,8 @@
                     <div class="row">
                         <div class="col-md-6">
                             <label class="col-md-5">Bộ phận IT:</label>
-                            <span class="col-md-7">jfhfdfkjhksdhf</span>
-                            {{--<span class="col-md-7">{{$request->team_id}}</span>--}}
+                            <span class="col-md-7">{{ $request['relations']['team']->name }}</span>
 
-                            <select class="form-control col-md-7" id="team" name="team">
-                                <?php
-                                foreach($teams as $team){
-                                ?>
-                                <option value="{{ $team->id }}"> {{ $team->name }} </option>
-                                <?php
-                                }
-                                ?>
-                            </select>
                         </div>
                         <div class="col-md-6">
                             <label class="col-md-5">Người liên quan</label>
@@ -134,8 +124,9 @@
                 <label class="h4 col-offset-2"><span class="glyphicon glyphicon-file"></span>Noi dung</label>
             </div>
             <div class="panel panel-body col-md-12">
-                //binh luan
-                <a href="#">Hiển thị thêm bình luận</a>
+                {{--//binh luan--}}
+                {{--<a href="#">Hiển thị thêm bình luận</a>--}}
+                {{ $request->content }}
             </div>
             <div class=" panel panel-body">
                 <div ><label class="control-label h4"><span class="glyphicon glyphicon-edit"></span>Binh luan</label></div>
