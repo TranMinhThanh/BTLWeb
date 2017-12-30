@@ -49,7 +49,6 @@
                                 foreach($teams as $team){
                             ?>
                             <option value="{{ $team->id }}"> {{ $team->name }} </option>
-                                {{--@foreach()--}}
                             <?php
                                 }
                             ?>

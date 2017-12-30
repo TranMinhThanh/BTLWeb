@@ -18,6 +18,8 @@ use Mail;
 class RequestEditController extends RequestController
 {
     //
+    protected $redirectTo = '/editRequest/';
+
     /**
      * Create a new controller instance.
      *
@@ -28,75 +30,62 @@ class RequestEditController extends RequestController
         // 2.fill vào view -> return view('editRequest', $data);
         $teams = Team::all();
         $request  = \App\Request::find($id);
+        $request->load('create_by');
+        $request->load('assign_to');
+        $request->load('team');
 
-        // lay  ten cua team
-        $requestTeam = \App\Team::find($request->team_id);
-        $data['requestTeam'] = $requestTeam->name;
-
-        //lay ten nguoi tao yeu cau
-        $createUser = \App\User::find($request->create_by);
-       // dump($createUser);
-        if ($createUser != null) {
-            $createBy = $createUser->name . "[" . $createUser->user_id . "]";
-            //  dd($requestTeam);
-        }
-        $data["createBy"] = $createBy;
-
-        //lay ten nguoi thuc hien
-        $assingedTo="";
-        $assingedUser = \App\User::find($request->assign_to);
-        // dump($createUser);
-        if ($assingedUser != null) {
-            $assingedTo = $assingedUser->name . "[" . $createUser->user_id . "]";
-        }
-        else{
-            $assingedTo="Công việc chưa được giao";
-        }
-        $data["assignedTo"] = $assingedTo;
+        $relaters = Relater::all()->where('request_id',$request['id']);
+        $relaters->load('user_id');
         $data['teams'] = $teams;
         $data['request'] = $request;
+        $data['relaters'] = $relaters;
         return view('editRequest', $data);
 
     }
-
     protected function editValidator(array $data){
         return Validator::make($data,[
+            'id' => 'required|int',
             'priority' => 'required|int|min:1|max:6',
             'deadline' => 'required|date',
             'team' => 'required',
             'status' => 'required',
         ]);
     }
-    public function editRequest(Request $request,$id){
+    public function editRequest(Request $request){
         $data =$request->all();
         $this ->editValidator($data)->validate();
-        $this->edit($data,$id);
+        $this->edit($data,$data['id']);
+        return redirect($this->redirectTo.$data['id']);
+
     }
 
     protected function edit(array $data,$id){
-        $news = Request::find($id);
-        $news->priority = $data['priority'];
-        $news->deadline = $data['deadline'];
-        $news->assigned_to = $data['assigned_to'];
-        $news->team_id = $data['team'];
-        $news->status = $data['status'];
+        $request = \App\Request::find($id);
+        $request->priority = $data['priority'];
+        $request->deadline = $data['deadline'];
+        if (array_key_exists('assigned_to',$data))
+            $request->assign_to = $data['assigned_to'];
+        $request->team_id = $data['team'];
+        $request->status = $data['status'];
         //cap nhat bang trung gian
-        // $news->relater()->sync($data['relater']);
-        $news->save();
-        if (!emptyArray($data['relater'])){
-            $oldRelaters = Relater::where('user-id', $id)->delete();
-            foreach ($data['relater'] as $relater) {
-                    // sử lý để lấy user_id của người liên quan VD a[id]
-                    $item = explode($relater,"["); //-> item[1]= "id]"
-                    $relater_id = explode($item[1],"]"); //-> realter_id[0]=id
+        // $request->relater()->sync($data['relater']);
+        $request->save();
+//        if (!emptyArray($data['relater'])){
+//            $oldRelaters = Relater::where('user-id', $id)->delete();
+//            foreach ($data['relater'] as $relater) {
+//                    // sử lý để lấy user_id của người liên quan VD a[id]
+//                    $item = explode($relater,"["); //-> item[1]= "id]"
+//                    $relater_id = explode($item[1],"]"); //-> realter_id[0]=id
+//
+//                    RelaterController::create($this->id, $relater_id[0]);
+//                    $email = User::find($relater_id[0])->email;
+//                    Mail::send('Notifi.mailNotifi', array('type' => env('typeNotifi.1'), 'person' => Auth::user()->name, 'name' => $data['title'], 'content' => $data['content']), function ($msg) use($email) {
+//                    $msg->from(env('MAIL_USERNAME'), 'btlweb');
+//                    $msg->to($email, env('typeNotifi.1'));
+//                    });
+//            }
+//        }
+//        if ($data)
 
-                    RelaterController::create($this->id, $relater_id[0]);
-                    $email = User::find($relater_id[0])->email;
-                    Mail::send('Notifi.mailNotifi', array('type' => env('typeNotifi.1'), 'person' => Auth::user()->name, 'name' => $data['title'], 'content' => $data['content']), function ($msg) use($email) {
-                    $msg->from(env('MAIL_USERNAME'), 'btlweb');
-                    $msg->to($email, env('typeNotifi.1'));
-                    });
-                }
-            }
     }
 }
