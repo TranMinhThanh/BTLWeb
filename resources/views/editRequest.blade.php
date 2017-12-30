@@ -145,32 +145,30 @@
         </div>
     </div>
     <script type="text/javascript">
-        $(document).ready(function()
-        {
-        $('#priority').hide();
-        $('#deadline').hide();
-        $('#team').hide();
-        $('#assigned_to').hide();
-        $('#relater').hide();
-        $('#status').hide();
-        $('#save').hide();
-        $('#save').click(save);
-        $('#cancel').hide();
-        $('#cancel').click(cancel);
+            document.write("adfsdf");
+            $('#priority').hide();
+            $('#deadline').hide();
+            $('#team').hide();
+            $('#assigned_to').hide();
+            $('#relater').hide();
+            $('#status').hide();
+            $('#save').hide();
+            $('#save').click(save);
+            $('#cancel').hide();
+            $('#cancel').click(cancel);
 
-            //sử dụng autocomplete với input có id = key
-        });
-
+        //sử dụng autocomplete với input có id = key
         $( "#relater")
             .on("keydown", function( event ) {
+                //document.write("sdfasd");
                  if ( event.keyCode === 9 &&
                      $(this).autocomplete( "instance" ).menu.active ) {
-                    event.preventDefault();
+                      event.preventDefault();
                 }
             })
             .autocomplete({
                 source: function( request, response ) {
-                    $.getJSON( "{{url('search/autocomplete')}}", {
+                    $.getJSON( '{{url('search/autocomplete/editRequest/'.$request->id)}}', {
                         term: extractLast( request.term )
                     }, response );
                 },
@@ -189,14 +187,14 @@
                     this.value = terms.join( ", " );
                     return false;
                 }
-
-        });
+            });
         function extractLast( term ) {
             return split( term ).pop();
         }
         function split( val ) {
             return val.split( /,\s*/ );
         }
+
         function edit(id){
             $(id).prev().hide();
             $(id).show();

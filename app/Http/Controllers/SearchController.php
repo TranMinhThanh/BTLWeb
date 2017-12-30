@@ -15,8 +15,9 @@ use App\User;
 class SearchController extends Controller
 {
 
-    public function autocomplete(Request $request)
+    public function autocomplete(Request $request, $type, $id)
     {
+     //   dd($request);
         $term = $request->term;
         $input = explode(",",$term);
         $len = count($input);
@@ -24,11 +25,19 @@ class SearchController extends Controller
 
        // var_dump($findElement);
         $results = array();
-        $queries = User:: where('name', 'LIKE', '%' . $findElement . '%')
-            ->take(5)->get();
-
+        $queries = array();
+        if($type == "createRequest") {
+            $queries = User:: where('name', 'LIKE', '%' . $findElement . '%')->where('id', '<>', Auth::id())->take(5)->get();
+        }
+        else{
+            if($type == 'editRequest'){
+                $req = \App\Request::find($id);
+                $createUser = $req->create_by;
+                $queries = User:: where('name', 'LIKE', '%' . $findElement . '%')->where('id', '<>', Auth::id())->take(5)->get();
+            }
+        }
         foreach ($queries as $query => $value) {
-            $results[] = ['id' => $value->id, 'value' => $value->name."[".$value->user_id."]"];
+            $results[] = ['id' => $value->id, 'value' => $value->name . "[" . $value->user_id . "]"];
         }
         return response()->json($results);
     }
