@@ -13,6 +13,8 @@ use Mail;
 class RequestController extends Controller
 {
     //
+    protected $redirectTo = '/filter/myRequests/all';
+
     /**
      * Create a new controller instance.
      *
@@ -47,37 +49,15 @@ class RequestController extends Controller
     public function createRequest(Request $request)
     {
         $data = $request->all();
-
         $this->validator($data)->validate();
-        $this->create($data);
-        if (!emptyArray($data['relater'])){
-            dd($data['relater']);
-            foreach ($data['relater'] as $relater) {
-                dd($relater);
-                // sử lý để lấy user_id của người liên quan VD a[id]
-                $item = explode($relater,"["); //-> item[1]= "id]"
-                $relater_id = explode($item[1],"]"); //-> realter_id[0]=id
-                dump($relater_id);
-                RelaterController::create($this->id, $relater_id[0]);
-                $email = User::find($relater_id[0])->email;
-                Mail::send('Notifi.mailNotifi', array('type' => env('typeNotifi.1'), 'person' => Auth::name(), 'name' => $data['title'], 'content' => $data['content']), function ($msg) use($email) {
-                    $msg->from('btlweb.uet@gmail.com', 'btlweb');
-                    $msg->to($email, env('typeNotifi.1'));
-                });
-            }
-        }
-        // mail cho ca nguoi tao request
-        $user = Auth::user()->email;
-        Mail::send('Notifi.mailNotifi',array('type'=>env('typeNotifi.1'), 'person'=>Auth::user()->name ,'name'=>$data['title'],'content'=>""),function($msg) use($user){
-            $msg->from('btlweb.uet@gmail.com','btlweb');
-            $msg->to($user,env('typeNotifi.1'));
-    });
-
+        $newrq = $this->create($data);
+        $this->sendMail($newrq,1);
+        return redirect($this->redirectTo);
     }
 
     public function create(array $data){
-//        if ($data['relater'].)
-        \App\Request::create([
+
+        return \App\Request::create([
             'title' => $data['title'],
             'create_by' => Auth::id(),
             'content' => $data['content'],
@@ -86,7 +66,6 @@ class RequestController extends Controller
             'deadline' => $data['deadline'],
             'team_id' => $data['team'],
         ]);
-      //  protected $redirectTo = '/createRequest';
     }
     public function comment(Request $request, $id){
         $comment = $request->all();
@@ -104,5 +83,32 @@ class RequestController extends Controller
                 });
             }
         }
+    }
+
+    public function sendMail(\App\Request $data, $type){
+        // mail cho nguoi tao request
+        $this->mail($data, User::find($data['create_by']),$type);
+
+        //mail cho người thực hiện (nếu có)
+        if (!is_null($data['assign_to'])){
+            $this->mail($data, User::find($data['assign_to']),$type);
+        }
+
+        //mail cho người liên quan
+        $relaters = Relater::all()->where('request_id',$data['id']);
+        foreach ($relaters as $relater){
+            $this->mail($data, User::find($relater['user_id']), $type);
+        }
+    }
+
+    public function mail(\App\Request $data, User $user, $type){
+        Mail::send('Notifi.mailNotifi', array(
+            'person' => $user->name,
+            'name' => $data['title'],
+            'content' => $data['content'],
+            'type' => $type,
+        ), function ($msg) use ($data, $user) {
+            $msg->to($user->email, env('typeNotifi.1'))->subject(env('typeNotifi.1') . " " . $data['title']);
+        });
     }
 }
