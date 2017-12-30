@@ -29,15 +29,15 @@
                     ?>
                         <tr>
                             <th>
-                                <a> <?php echo($stt++); ?></a>
+                                <label> <?php echo($stt++); ?></label>
                             </th>
 
                             <th>
-                                <a> {{$request->title}} </a>
+                                <a href="{{ url('editRequest/'.$request->id) }}"> {{$request->title}} </a>
                             </th>
 
                             <th>
-                                <a> {{ env('priority.' . $request->priority)}} </a>
+                                <label> {{ env('priority.' . $request->priority)}} </label>
                             </th>
 
                             <th>
@@ -49,7 +49,7 @@
                             </th>
 
                             <th>
-                                <a> {{$request['relations']['team']->name}} </a>
+                                <label> {{$request['relations']['team']->name}} </label>
                             </th>
 
                             <th>

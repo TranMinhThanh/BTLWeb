@@ -50,9 +50,9 @@ class RequestController extends Controller
     public function createRequest(Request $request)
     {
         $data = $request->all();
-        $this->getRelaterId($request['relater']);
+        $relaterIds = $this->getRelaterId($request['relater']);
         $this->validator($data)->validate();
-        $newRequest = $this->create($data);
+        $newRequest = $this->create($data, $relaterIds);
         // xu ly luu anh
         $images = $request->file("file");
         if(!empty($images)){
@@ -61,57 +61,33 @@ class RequestController extends Controller
                 $imageCtrl->storeImage($newRequest,$image);
             }
         }
-        $relaters = $this->getRelaterId($data['relater']);
-        // lay mail cua nguoi lien quan vaf gui
-        if($relaters!= null){
-            foreach ($relaters as $relater) {
-                $emailRelaters = User::where('user_id', $relater)->get();
-                if ($emailRelaters != null) {
-                    foreach ($emailRelaters as $emailRelater) {
-                        $email = $emailRelater->email;
-                        dump($email);
-                        Mail::send('Notifi.mailNotifi', array('type' => env('typeNotifi.1'), 'person' => Auth::user()->name, 'name' => $data['title'], 'content' => $data['content']), function ($msg) use ($email) {
-                            $msg->from('btlweb.uet@gmail.com', 'btlweb');
-                            $msg->to($email, env('typeNotifi.1'));
-                        });
-                    }
-                }
-            }
-        }
-        // mail cho ca nguoi tao request
-        $user = Auth::user()->email;
-        Mail::send('Notifi.mailNotifi',array('type'=>env('typeNotifi.1'), 'person'=>Auth::user()->name ,'name'=>$data['title'],'content'=>""),function($msg) use($user){
-            $msg->from('btlweb.uet@gmail.com','btlweb');
-            $msg->to($user,env('typeNotifi.1'));
-    });
-
-        $this->sendMail($newrq,1);
+        $this->sendMail($newRequest,1);
         return redirect($this->redirectTo);
     }
 
     //lay id cua nguoi lien quan
     private function getRelaterId($data){
-        $arrayId = array();
-        $i = 0;
+        $relaterIds = [];
         if (!empty($data)) {
             $arrayRelater = explode(',', $data);
             foreach ($arrayRelater as $relater) {
                 // sử lý để lấy user_id của người liên quan VD a[id]
                 $item = explode("[", $relater); //-> item[1]= "id]"
                 if (count($item) >= 2) {
-                    $relater_id = explode("]", $item[1]); //-> realter_id[0]=id
-                    $arrayId[$i] = $relater_id[0];
-                    dump($arrayId);
-                    $i++;
-                }
+                    $relaterUserId = explode("]", $item[1]); //-> realter_id[0]=id
+                    // 1 relater là 1 user
+                    $users = User::all()->where('user_id',$relaterUserId[0]);
+                    foreach ($users as $user){
+                        $relaterIds[] = $user['id'];
+                    }
+               }
             }
         }
-        return $arrayId;
+        return $relaterIds;
     }
 
-    public function create(array $data){
-
-        return \App\Request::create([
+    public function create(array $data, array $relaterIds){
+        $newRequest = \App\Request::create([
             'title' => $data['title'],
             'create_by' => Auth::id(),
             'content' => $data['content'],
@@ -120,7 +96,11 @@ class RequestController extends Controller
             'deadline' => $data['deadline'],
             'team_id' => $data['team'],
         ]);
-      //  protected $redirectTo = '/createRequest';
+
+        foreach ($relaterIds as $relaterId){
+            RelaterController::create($newRequest['id'],$relaterId);
+        }
+        return $newRequest;
     }
     public function comment(Request $request, $id){
         $comment = $request->all();
