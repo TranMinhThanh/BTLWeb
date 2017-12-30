@@ -13,7 +13,7 @@
         </div>
         <div class="panel panel-body">
         <div class="col-md-12">
-            <form margin=3% method="post" id="requestForm" action="{{ route('createRequest') }}">
+            <form margin=3% method="post" id="requestForm" action="{{ route('createRequest') }}" enctype="multipart/form-data">
                 {{ csrf_field() }}
                 <div class="row">
                     <div class="form-group col-md-12">
@@ -78,7 +78,13 @@
                             <button type="button" class="btn btn-default "><span class="glyphicon glyphicon-italic"></span> </button>
                         </div>
                     </div>
+                </div>
 
+                <div class="row">
+                    <div class="form-group col-md-12">
+                    <label class="control-label">Chọn ảnh cho công việc</label>
+                    <input type="file" name="file[]" multiple>
+                    </div>
                 </div>
 
                 <div class="form-group">

@@ -23,13 +23,27 @@ class RequestEditController extends RequestController
      *
      * @return void
      */
-    public function getEditView(){
+    public function getEditView($id){
         // 1.lay thong tin của request
         // 2.fill vào view -> return view('editRequest', $data);
         $teams = Team::all();
-      //  $data  = Request::find();
+        $request  = \App\Request::find($id);
+
+        $requestTeam = \App\Team::find($request->team_id);
+        $createUser = \App\User::find($requestTeam->create_by);
+        if($createUser != null) {
+            $createBy = $createUser->name . "[" . $createUser->user_id . "]";
+            //  dd($requestTeam);
+        }
+        else{
+            $createBy = "chua phan cong";
+        }
+
+        $data["createBy"] = $createBy;
+        $data['requestTeam'] = $requestTeam->name;
         $data['teams'] = $teams;
-        return view('editRequest',$data);
+        $data['request'] = $request;
+        return view('editRequest', $data);
 
     }
     protected function editValidator(array $data){

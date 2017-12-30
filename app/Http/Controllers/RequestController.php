@@ -7,6 +7,7 @@ use App\Team;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Tests\TestCase;
 use Mail;
@@ -47,23 +48,32 @@ class RequestController extends Controller
     public function createRequest(Request $request)
     {
         $data = $request->all();
-
+        $this->getRelaterId($request['relater']);
         $this->validator($data)->validate();
-        $this->create($data);
-        if (!emptyArray($data['relater'])){
-            dd($data['relater']);
-            foreach ($data['relater'] as $relater) {
-                dd($relater);
-                // sử lý để lấy user_id của người liên quan VD a[id]
-                $item = explode($relater,"["); //-> item[1]= "id]"
-                $relater_id = explode($item[1],"]"); //-> realter_id[0]=id
-                dump($relater_id);
-                RelaterController::create($this->id, $relater_id[0]);
-                $email = User::find($relater_id[0])->email;
-                Mail::send('Notifi.mailNotifi', array('type' => env('typeNotifi.1'), 'person' => Auth::name(), 'name' => $data['title'], 'content' => $data['content']), function ($msg) use($email) {
-                    $msg->from('btlweb.uet@gmail.com', 'btlweb');
-                    $msg->to($email, env('typeNotifi.1'));
-                });
+        $newRequest = $this->create($data);
+        // xu ly luu anh
+        $images = $request->file("file");
+        if(!empty($images)){
+            foreach ($images as $image){
+                $imageCtrl = new ImageController();
+                $imageCtrl->storeImage($newRequest,$image);
+            }
+        }
+        $relaters = $this->getRelaterId($data['relater']);
+        // lay mail cua nguoi lien quan vaf gui
+        if($relaters!= null){
+            foreach ($relaters as $relater) {
+                $emailRelaters = User::where('user_id', $relater)->get();
+                if ($emailRelaters != null) {
+                    foreach ($emailRelaters as $emailRelater) {
+                        $email = $emailRelater->email;
+                        dump($email);
+                        Mail::send('Notifi.mailNotifi', array('type' => env('typeNotifi.1'), 'person' => Auth::user()->name, 'name' => $data['title'], 'content' => $data['content']), function ($msg) use ($email) {
+                            $msg->from('btlweb.uet@gmail.com', 'btlweb');
+                            $msg->to($email, env('typeNotifi.1'));
+                        });
+                    }
+                }
             }
         }
         // mail cho ca nguoi tao request
@@ -72,12 +82,30 @@ class RequestController extends Controller
             $msg->from('btlweb.uet@gmail.com','btlweb');
             $msg->to($user,env('typeNotifi.1'));
     });
-
     }
 
+    //lay id cua nguoi lien quan
+    private function getRelaterId($data){
+        $arrayId = array();
+        $i = 0;
+        if (!empty($data)) {
+            $arrayRelater = explode(',', $data);
+            foreach ($arrayRelater as $relater) {
+                // sử lý để lấy user_id của người liên quan VD a[id]
+                $item = explode("[", $relater); //-> item[1]= "id]"
+                if (count($item) >= 2) {
+                    $relater_id = explode("]", $item[1]); //-> realter_id[0]=id
+                    $arrayId[$i] = $relater_id[0];
+                    dump($arrayId);
+                    $i++;
+                }
+            }
+        }
+        return $arrayId;
+    }
     public function create(array $data){
 //        if ($data['relater'].)
-        \App\Request::create([
+        $request = \App\Request::create([
             'title' => $data['title'],
             'create_by' => Auth::id(),
             'content' => $data['content'],
@@ -86,6 +114,7 @@ class RequestController extends Controller
             'deadline' => $data['deadline'],
             'team_id' => $data['team'],
         ]);
+        return $request;
       //  protected $redirectTo = '/createRequest';
     }
     public function comment(Request $request, $id){

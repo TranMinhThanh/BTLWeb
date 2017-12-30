@@ -32,38 +32,38 @@
                     {{--them gia trị ban dau cua cac form--}}
                         <div class="col-md-6">
                             <label class="col-md-5" id="createDate">Ngày tạo:</label>
-                            <span class="col-md-7">jfhfdfkjhksdhf</span>
-                            {{--<span class="col-md-7">{{$request->timestamp('create_on')}}</span>--}}
+                            {{--<span class="col-md-7">jfhfdfkjhksdhf</span>--}}
+                            {{--<span class="col-md-7">{{$request->create_on}}</span>--}}
 
                         </div>
                         <div class="col-md-6">
                             <label class="col-md-5">Ngày hết hạn:</label>
-                            <span class="col-md-7">jfhfdfkjhksdhf</span>
-                            <input id="deadline" type= 'date' name="deadline" class="form-control col-md-7" placeholder="old dateline"/>
-                            {{--<span class="col-md-7">{{$request->deadline}}</span>--}}
-                            {{--<input id="deadline" type= 'date' name="deadline" class="form-control col-md-7 value={{$request->deadline}} placeholder={{$request->deadline}}>--}}
+                            {{--<span class="col-md-7">jfhfdfkjhksdhf</span>--}}
+                            {{--<input id="deadline" type= 'date' name="deadline" class="form-control col-md-7" placeholder="old dateline"/>--}}
+                            <span class="col-md-7">{{$request->deadline}}</span>
+                            <input id="deadline" type= 'date' name="deadline" class="form-control col-md-7" value={{$request->deadline}} placeholder={{$request->deadline}}>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <label class="col-md-5" id="createBy">Người yêu cầu:</label>
-                            <span class="col-md-7">jfhfdfkjhksdhf</span>
-                            {{--<span class="col-md-7">{{$request->create_by}}</span>--}}
-    
+                            {{--<span class="col-md-7">jfhfdfkjhksdhf</span>--}}
+                            <span class="col-md-7">{{$request->create_by}}</span>
                         </div>
+
                         <div class="col-md-6">
                             <label class="col-md-5">Người thực hiện:</label>
-                            <span class="col-md-7">jfhfdfkjhksdhf</span>
-                            <input id="assigned_to" class="form-control col-md-7" type="text" >
-                            {{--<span class="col-md-7">{{$request->create_by}}</span>--}}
-                            {{--<input id="assigned_to" class="form-control col-md-7" type="text" placeholder={{$request->assigned_to}} value={{$request->assigned_to}}>--}}
+                            {{--<span class="col-md-7">jfhfdfkjhksdhf</span>--}}
+                            {{--<input id="assigned_to" class="form-control col-md-7" type="text" >--}}
+                            <span class="col-md-7">{{$createBy}}</span>
+                            <input id="assigned_to" class="form-control col-md-7" type="text" placeholder={{$request->assigned_to}} value={{$request->assigned_to}}>
                         </div>
                     </div>
                     <div class="row ">
                         <div class="col-md-6">
                             <label class="col-md-5">Mức độ ưu tiên:</label>
-                            <span class="col-md-7">jfhfdfkjhksdhf</span>
-                            {{--<span class="col-md-7">{{$request->priority}}</span>--}}
+                            {{--<span class="col-md-7">jfhfdfkjhksdhf</span>--}}
+                            <span class="col-md-7">{{env('priority.'.$request->priority)}}</span>
                             <select class="form-control col-md-7" id="priority" name="priority" >
                                 <option value="1">{{env('priority.1')}}</option>
                                 <option value="2">{{env('priority.2')}}</option>
@@ -81,9 +81,9 @@
                         </div>
                         <div class="col-md-6">
                             <label class="col-md-5">Trạng thái:</label>
-                            <span class="col-md-7">jfhfdfkjhksdhf</span>
+                            {{--<span class="col-md-7">jfhfdfkjhksdhf</span>--}}
 
-                            {{--<span class="col-md-7">{{$request->status}}</span>--}}
+                            <span class="col-md-7">{{env('status.'.$request->status)}}</span>
                             <select class="form-control col-md-7" id="status" name="status">
                                 <option value="1">{{env('status.1')}}</option>
                                 <option value="2">{{env('status.2')}}</option>
@@ -100,8 +100,8 @@
                     <div class="row">
                         <div class="col-md-6">
                             <label class="col-md-5">Bộ phận IT:</label>
-                            <span class="col-md-7">jfhfdfkjhksdhf</span>
-                            {{--<span class="col-md-7">{{$request->team_id}}</span>--}}
+                            {{--<span class="col-md-7">jfhfdfkjhksdhf</span>--}}
+                            <span class="col-md-7">{{$requestTeam}}</span>
 
                             <select class="form-control col-md-7" id="team" name="team">
                                 <?php
