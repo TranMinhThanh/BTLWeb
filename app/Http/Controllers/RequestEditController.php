@@ -31,6 +31,7 @@ class RequestEditController extends RequestController
         $teams = Team::all();
         $request  = \App\Request::find($id);
         $request->load('create_by');
+//        dd($request['relations']['create_by']);
         $request->load('assign_to');
         $request->load('team');
 
@@ -39,8 +40,23 @@ class RequestEditController extends RequestController
         $data['teams'] = $teams;
         $data['request'] = $request;
         $data['relaters'] = $relaters;
-        return view('editRequest', $data);
 
+        if (Auth::id() == $request['relations']['create_by']->id || Auth::user()->level == 2|| Auth::user()->level == 3) {
+                return view('editRequest', $data);
+        }
+        else if(!empty($request['relations']['assign_to'])){
+            if(Auth::id() == $request['relations']['assign_to']->id){
+                return view('editRequest', $data);
+            }
+        }
+        else {
+            foreach ($relaters as $relater) {
+                if (Auth::id() == $relater['relations']['user_id']->id) {
+                    return view('editRequest', $data);
+                }
+            }
+        }
+            return view('home');
     }
     protected function editValidator(array $data){
         return Validator::make($data,[
