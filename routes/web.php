@@ -29,6 +29,10 @@ Route::post('createRequest',
 Route::get('filter/{kindOfRequests?}/{status?}', 'RequestFilterController@myRequest');
 
 Route::get('editRequest/{id}', 'RequestEditController@getEditView');
+Route::post('editRequest',
+    [   'as' => 'editRequest',
+        'uses' => 'RequestEditController@editRequest'
+    ]);
 
 Route::get('/filter', function () {
     return view('filter');
