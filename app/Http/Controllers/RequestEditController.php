@@ -86,22 +86,21 @@ class RequestEditController extends RequestController
         //cap nhat bang trung gian
         // $request->relater()->sync($data['relater']);
         $request->save();
-//        if (!emptyArray($data['relater'])){
-//            $oldRelaters = Relater::where('user-id', $id)->delete();
-//            foreach ($data['relater'] as $relater) {
-//                    // sử lý để lấy user_id của người liên quan VD a[id]
-//                    $item = explode($relater,"["); //-> item[1]= "id]"
-//                    $relater_id = explode($item[1],"]"); //-> realter_id[0]=id
-//
-//                    RelaterController::create($this->id, $relater_id[0]);
-//                    $email = User::find($relater_id[0])->email;
-//                    Mail::send('Notifi.mailNotifi', array('type' => env('typeNotifi.1'), 'person' => Auth::user()->name, 'name' => $data['title'], 'content' => $data['content']), function ($msg) use($email) {
-//                    $msg->from(env('MAIL_USERNAME'), 'btlweb');
-//                    $msg->to($email, env('typeNotifi.1'));
-//                    });
-//            }
-//        }
-//        if ($data)
+
+        //update relater
+        $relaters = Relater::all()->where('request_id',$id);
+        $relaterIds = [];
+        foreach ($relaters as $relater){
+            $relaterIds []= $relater['id'];
+        }
+        $newRelaterIds = $this->getRelaterId($data['relater']);
+        $diffRelaters = array_diff($relaterIds,$newRelaterIds);
+        $diffNewRelaters = array_diff($newRelaterIds,$relaterIds);
+        foreach ($diffRelaters as $diffRelater)
+            Relater::where('user_id', $diffRelater)->delete();
+        foreach ($diffNewRelaters as $diffNewRelater)
+            RelaterController::create($id,$diffNewRelater);
+
 
     }
 }

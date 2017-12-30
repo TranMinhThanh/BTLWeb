@@ -66,7 +66,7 @@ class RequestController extends Controller
     }
 
     //lay id cua nguoi lien quan
-    private function getRelaterId($data){
+    protected function getRelaterId($data){
         $relaterIds = [];
         if (!empty($data)) {
             $arrayRelater = explode(',', $data);

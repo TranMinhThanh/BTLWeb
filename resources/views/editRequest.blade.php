@@ -100,7 +100,7 @@
                                         {{$relater['relations']['user_id']->name.'['.$relater['relations']['user_id']->user_id.'],'}}
                                   <?php } ?>
                             </span>
-                            <input id="relater" class="form-control col-md-7" type="text">
+                            <input id="relater" name="relater" class="form-control col-md-7" type="text">
 
                             {{--<input id="relater" class="form-control col-md-7" type="text" value = {{$request->relater}} placeholder={{$request->relater}}>--}}
 
@@ -173,7 +173,7 @@
                 .autocomplete({
                     source: function( request, response ) {
                         $.getJSON( '{{url('search/autocomplete/editRequest/'.$request->id)}}', {
-                            term: extractLast( request.term )
+                            term: request.term
                         }, response );
                     },
                     focus: function() {
@@ -181,7 +181,7 @@
                         return false;
                     },
                     select: function( event, ui ) {
-                        var terms = split( this.value );
+                        var terms = this.value.split(/,\s*/);
                         // remove the current input
                         terms.pop();
                         // add the selected item
@@ -193,13 +193,6 @@
                     }
                 });
 
-        //sử dụng autocomplete với input có id = key
-        function extractLast( term ) {
-            return split( term ).pop();
-        }
-        function split( val ) {
-            return val.split( /,\s*/ );
-        }
 
         function edit(id){
             $(id).prev().hide();
