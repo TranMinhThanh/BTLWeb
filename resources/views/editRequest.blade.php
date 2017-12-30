@@ -1,21 +1,14 @@
 @extends('layout')
 @section('child_head')
     <link rel="stylesheet" href={{ asset('css/ajax/libs/jqueryui/jquery-ui.css') }}>
-
     <script src= {{ asset('js/ajax/libs/jquery/jquery.min.js') }}></script>
     <script src= {{ asset('js/ajax/libs/jqueryui/jquery-ui.min.js') }}></script>
-    {{--<style>--}}
-        {{--.ui-autocomplete-loading {--}}
-            {{--background: white url("images/ui-anim_basic_16x16.gif") right center no-repeat;--}}
-        {{--}--}}
-        {{--</style>--}}
 @endsection
-
 @section('child_content')
     <div id ="editRequest" class="container-fluid">
         <div class=" panel panel-default" >
             <div class="panel-heading ">
-                <label class="h4 col-md-7"><span class="glyphicon glyphicon-globe"></span>Test</label>
+                <label class="h4 col-md-7"><span class="glyphicon glyphicon-globe"></span>{{$request->title}}</label>
                 <div class="btn-toolbar">
                     <button type="button" class=" btn btn-default" title="Thay đổi bộ phận IT" onclick="edit('#team')"><span class="glyphicon glyphicon glyphicon-cd small "></span></button>
                     <button type="button" class=" btn btn-default" title="Thay đổi mức độ ưu tiên" onclick="edit('#priority')"><span class="glyphicon glyphicon-retweet small"></span></button>
@@ -33,7 +26,7 @@
                         <div class="col-md-6">
                             <label class="col-md-5" id="createDate">Ngày tạo:</label>
                             {{--<span class="col-md-7">jfhfdfkjhksdhf</span>--}}
-                            {{--<span class="col-md-7">{{$request->create_on}}</span>--}}
+                            <span class="col-md-7">{{$request->created_at}}</span>
 
                         </div>
                         <div class="col-md-6">
@@ -47,16 +40,16 @@
                     <div class="row">
                         <div class="col-md-6">
                             <label class="col-md-5" id="createBy">Người yêu cầu:</label>
-                            {{--<span class="col-md-7">jfhfdfkjhksdhf</span>--}}
-                            <span class="col-md-7">{{$request->create_by}}</span>
+                            {{--<span class="col-md-7">{{$request->create_by}}</span>--}}
+                            <span class="col-md-7">{{$createBy}}</span>
                         </div>
 
                         <div class="col-md-6">
                             <label class="col-md-5">Người thực hiện:</label>
                             {{--<span class="col-md-7">jfhfdfkjhksdhf</span>--}}
                             {{--<input id="assigned_to" class="form-control col-md-7" type="text" >--}}
-                            <span class="col-md-7">{{$createBy}}</span>
-                            <input id="assigned_to" class="form-control col-md-7" type="text" placeholder={{$request->assigned_to}} value={{$request->assigned_to}}>
+                            <span class="col-md-7">{{$assignedTo}}</span>
+                            <input id="assigned_to" class="form-control col-md-7" type="text" placeholder="{{$assignedTo}}">
                         </div>
                     </div>
                     <div class="row ">
@@ -64,19 +57,19 @@
                             <label class="col-md-5">Mức độ ưu tiên:</label>
                             {{--<span class="col-md-7">jfhfdfkjhksdhf</span>--}}
                             <span class="col-md-7">{{env('priority.'.$request->priority)}}</span>
-                            <select class="form-control col-md-7" id="priority" name="priority" >
+                            {{--<select class="form-control col-md-7" id="priority" name="priority" >--}}
+                                {{--<option value="1">{{env('priority.1')}}</option>--}}
+                                {{--<option value="2">{{env('priority.2')}}</option>--}}
+                                {{--<option value="3">{{env('priority.3')}}</option>--}}
+                                {{--<option value="4">{{env('priority.4')}}</option>--}}
+                            {{--</select>--}}
+
+                            <select class="form-control col-md-7" id="priority" name="priority" value={{$request->priority}}>
                                 <option value="1">{{env('priority.1')}}</option>
                                 <option value="2">{{env('priority.2')}}</option>
                                 <option value="3">{{env('priority.3')}}</option>
                                 <option value="4">{{env('priority.4')}}</option>
                             </select>
-
-                            {{--<select class="form-control col-md-7" id="priority" name="priority" value={{$request->priority}}>--}}
-                                {{--<option value="1">{{env('priorty.1')}}</option>--}}
-                                {{--<option value="2">{{env('priorty.2')}}</option>--}}
-                                {{--<option value="3">{{env('priorty.3')}}</option>--}}
-                                {{--<option value="4">{{env('priorty.4')}}</option>--}}
-                            {{--</select>--}}
 
                         </div>
                         <div class="col-md-6">
@@ -163,32 +156,30 @@
         </div>
     </div>
     <script type="text/javascript">
-        $(document).ready(function()
-        {
-        $('#priority').hide();
-        $('#deadline').hide();
-        $('#team').hide();
-        $('#assigned_to').hide();
-        $('#relater').hide();
-        $('#status').hide();
-        $('#save').hide();
-        $('#save').click(save);
-        $('#cancel').hide();
-        $('#cancel').click(cancel);
+            document.write("adfsdf");
+            $('#priority').hide();
+            $('#deadline').hide();
+            $('#team').hide();
+            $('#assigned_to').hide();
+            $('#relater').hide();
+            $('#status').hide();
+            $('#save').hide();
+            $('#save').click(save);
+            $('#cancel').hide();
+            $('#cancel').click(cancel);
 
-            //sử dụng autocomplete với input có id = key
-        });
-
+        //sử dụng autocomplete với input có id = key
         $( "#relater")
             .on("keydown", function( event ) {
+                //document.write("sdfasd");
                  if ( event.keyCode === 9 &&
                      $(this).autocomplete( "instance" ).menu.active ) {
-                    event.preventDefault();
+                      event.preventDefault();
                 }
             })
             .autocomplete({
                 source: function( request, response ) {
-                    $.getJSON( "{{url('search/autocomplete')}}", {
+                    $.getJSON( '{{url('search/autocomplete/editRequest/'.$request->id)}}', {
                         term: extractLast( request.term )
                     }, response );
                 },
@@ -207,14 +198,14 @@
                     this.value = terms.join( ", " );
                     return false;
                 }
-
-        });
+            });
         function extractLast( term ) {
             return split( term ).pop();
         }
         function split( val ) {
             return val.split( /,\s*/ );
         }
+
         function edit(id){
             $(id).prev().hide();
             $(id).show();
@@ -234,12 +225,12 @@
             $('#save').hide();
             $('#cancel').hide();
             //thiet lap lai gia tri ban dau:
-            {{--$('#priority').val({{$request->priority}});--}}
-            {{--$('#deadline').val({{$request->deadline}});--}}
-            {{--$('#team').val({{$request->team_id}});--}}
-            {{--$('#assigned_to').val({{$request->assigned_to}});--}}
-            {{--$('#relater').val({{$request->relater}});--}}
-            {{--$('#status').val({{$request->status}});--}}
+            $('#priority').val('{{$request->priority}}');
+            $('#deadline').val('{{$request->deadline}}');
+            $('#team').val('{{$request->team_id}}');
+            $('#assigned_to').val({{$request->assigned_to}});
+            $('#relater').val({{$request->relater}});
+            $('#status').val({{$request->status}});
             //hien thi lai gia tri cu
             $('#priority').prev().show();
             $('#deadline').prev().show();

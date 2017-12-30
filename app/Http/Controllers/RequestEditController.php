@@ -29,23 +29,36 @@ class RequestEditController extends RequestController
         $teams = Team::all();
         $request  = \App\Request::find($id);
 
+        // lay  ten cua team
         $requestTeam = \App\Team::find($request->team_id);
-        $createUser = \App\User::find($requestTeam->create_by);
-        if($createUser != null) {
+        $data['requestTeam'] = $requestTeam->name;
+
+        //lay ten nguoi tao yeu cau
+        $createUser = \App\User::find($request->create_by);
+       // dump($createUser);
+        if ($createUser != null) {
             $createBy = $createUser->name . "[" . $createUser->user_id . "]";
             //  dd($requestTeam);
         }
-        else{
-            $createBy = "chua phan cong";
-        }
-
         $data["createBy"] = $createBy;
-        $data['requestTeam'] = $requestTeam->name;
+
+        //lay ten nguoi thuc hien
+        $assingedTo="";
+        $assingedUser = \App\User::find($request->assign_to);
+        // dump($createUser);
+        if ($assingedUser != null) {
+            $assingedTo = $assingedUser->name . "[" . $createUser->user_id . "]";
+        }
+        else{
+            $assingedTo="Công việc chưa được giao";
+        }
+        $data["assignedTo"] = $assingedTo;
         $data['teams'] = $teams;
         $data['request'] = $request;
         return view('editRequest', $data);
 
     }
+
     protected function editValidator(array $data){
         return Validator::make($data,[
             'priority' => 'required|int|min:1|max:6',

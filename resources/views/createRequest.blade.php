@@ -111,7 +111,7 @@
             })
             .autocomplete({
                 source: function( request, response ) {
-                    $.getJSON( "{{url('search/autocomplete')}}", {
+                    $.getJSON( "{{url('search/autocomplete/createRequest/0')}}", {
                         term: extractLast( request.term )
                     }, response );
                 },

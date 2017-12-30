@@ -34,4 +34,4 @@ Route::get('/filter', function () {
     return view('filter');
 });
 Route::get("/userInfo", 'UserController@getProfile');
-Route::get('search/autocomplete', 'SearchController@autocomplete');
+Route::get('search/autocomplete/{type}/{id?}', 'SearchController@autocomplete');
