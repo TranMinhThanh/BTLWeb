@@ -64,7 +64,10 @@
                     <?php } ?>
                 </tbody>
             </table>
-            <?php echo $requests->render(); ?>
+            <?php
+                if (get_class($requests) != "Illuminate\Database\Eloquent\Collection")
+                    echo $requests->render();
+                ?>
         </div>
 
     </div>

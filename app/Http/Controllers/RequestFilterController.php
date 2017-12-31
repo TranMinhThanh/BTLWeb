@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth;
 class RequestFilterController extends RequestController
 {
     public static function myRequest(Request $rq, $kindOfRequests, $status){
-        if ($rq->ajax() || 'NULL') {
             $requests = \App\Request::paginate(20);
 
             if (env($kindOfRequests) == 0)
@@ -35,6 +34,5 @@ class RequestFilterController extends RequestController
             $data['requests'] = $requests;
 
             return view('filter', $data);
-        }
     }
 }
