@@ -20,7 +20,7 @@
                     <button type="button" class=" btn btn-default" title="Thay đổi bộ phận IT" onclick="edit('#team')"><span class="glyphicon glyphicon glyphicon-cd small "></span></button>
                     <button type="button" class=" btn btn-default" title="Thay đổi mức độ ưu tiên" onclick="edit('#priority')"><span class="glyphicon glyphicon-retweet small"></span></button>
                     <button type="button" class=" btn btn-default" title="Thay đổi deadline" onclick="edit('#deadline')"><span class="glyphicon glyphicon-calendar small"></span></button>
-                    <button type="button" class=" btn btn-default" title="Assign" onclick="edit('#assigned_to')"><span class="glyphicon glyphicon-hand-right small"></span></button>
+                    <button type="button" class=" btn btn-default" title="Assign" onclick="edit('#assigned_to')" id="buttonAssignEdit"><span class="glyphicon glyphicon-hand-right small"></span></button>
                     <button type="button" class=" btn btn-default" title="Thay đổi người liên quan" onclick="edit('#relater')"><span class="glyphicon glyphicon-user small"></span></button>
                     <button type="button" class=" btn btn-default" title="Thay đổi trạng thái" onclick="edit('#status')"><span class="glyphicon glyphicon-transfer"></span></button>
                 </div>
@@ -156,6 +156,10 @@
             $('#save').click(save);
             $('#cancel').hide();
             $('#cancel').click(cancel);
+
+            if('{{Auth::user()->level}}' !=3 && '{{Auth::user()->level}}' !=2 ){
+                $("#buttonAssignEdit").hide();
+            }
         });
 
         $( "#relater")
