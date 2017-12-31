@@ -7,12 +7,15 @@ use App\Team;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Tests\TestCase;
 use Mail;
 class RequestController extends Controller
 {
     //
+    protected $redirectTo = '/filter/myRequests/all';
+
     /**
      * Create a new controller instance.
      *
@@ -28,16 +31,6 @@ class RequestController extends Controller
         $data['teams'] = $teams;
         return view('createRequest',$data);
     }
-
-    public function getEditView(){
-        // 1.lay thong tin của request
-        // 2.fill vào view -> return view('editRequest', $data);
-        $teams = Team::all();
-        $data['teams'] = $teams;
-        return view('editRequest',$data);
-
-    }
-
     /**
      * Get a validator for an incoming registration request.
      *
@@ -57,30 +50,44 @@ class RequestController extends Controller
     public function createRequest(Request $request)
     {
         $data = $request->all();
+        $relaterIds = $this->getRelaterId($request['relater']);
         $this->validator($data)->validate();
-        $this->create($data);
-        if (!emptyArray($data['relater'])){
-            foreach ($data['relater'] as $relater) {
-                RelaterController::create($this->id, $relater);
-                $email = User::find($relater)->email;
-                Mail::send('Notifi.mailNotifi', array('type' => env('typeNotifi.1'), 'person' => Auth::name(), 'name' => $data['title'], 'content' => $data['content']), function ($msg) use($email) {
-                    $msg->from('btlweb.uet@gmail.com', 'btlweb');
-                    $msg->to($email, env('typeNotifi.1'));
-                });
+        $newRequest = $this->create($data, $relaterIds);
+        // xu ly luu anh
+        $images = $request->file("file");
+        if(!empty($images)){
+            foreach ($images as $image){
+                $imageCtrl = new ImageController();
+                $imageCtrl->storeImage($newRequest,$image);
             }
         }
-        // mail cho ca nguoi tao request
-        $user = Auth::user()->email;
-        Mail::send('Notifi.mailNotifi',array('type'=>env('typeNotifi.1'), 'person'=>Auth::user()->name ,'name'=>$data['title'],'content'=>""),function($msg) use($user){
-            $msg->from('btlweb.uet@gmail.com','btlweb');
-            $msg->to($user,env('typeNotifi.1'));
-    });
-
+        $this->sendMail($newRequest,1);
+        return redirect($this->redirectTo);
     }
 
-    public function create(array $data){
-//        if ($data['relater'].)
-        \App\Request::create([
+    //lay id cua nguoi lien quan
+    protected function getRelaterId($data){
+        $relaterIds = [];
+        if (!empty($data)) {
+            $arrayRelater = explode(',', $data);
+            foreach ($arrayRelater as $relater) {
+                // sử lý để lấy user_id của người liên quan VD a[id]
+                $item = explode("[", $relater); //-> item[1]= "id]"
+                if (count($item) >= 2) {
+                    $relaterUserId = explode("]", $item[1]); //-> realter_id[0]=id
+                    // 1 relater là 1 user
+                    $users = User::all()->where('user_id',$relaterUserId[0]);
+                    foreach ($users as $user){
+                        $relaterIds[] = $user['id'];
+                    }
+               }
+            }
+        }
+        return $relaterIds;
+    }
+
+    public function create(array $data, array $relaterIds){
+        $newRequest = \App\Request::create([
             'title' => $data['title'],
             'create_by' => Auth::id(),
             'content' => $data['content'],
@@ -89,7 +96,11 @@ class RequestController extends Controller
             'deadline' => $data['deadline'],
             'team_id' => $data['team'],
         ]);
-      //  protected $redirectTo = '/createRequest';
+
+        foreach ($relaterIds as $relaterId){
+            RelaterController::create($newRequest['id'],$relaterId);
+        }
+        return $newRequest;
     }
     public function comment(Request $request, $id){
         $comment = $request->all();
@@ -107,5 +118,32 @@ class RequestController extends Controller
                 });
             }
         }
+    }
+
+    public function sendMail(\App\Request $data, $type){
+        // mail cho nguoi tao request
+        $this->mail($data, User::find($data['create_by']),$type);
+
+        //mail cho người thực hiện (nếu có)
+        if (!is_null($data['assign_to'])){
+            $this->mail($data, User::find($data['assign_to']),$type);
+        }
+
+        //mail cho người liên quan
+        $relaters = Relater::all()->where('request_id',$data['id']);
+        foreach ($relaters as $relater){
+            $this->mail($data, User::find($relater['user_id']), $type);
+        }
+    }
+
+    public function mail(\App\Request $data, User $user, $type){
+        Mail::send('Notifi.mailNotifi', array(
+            'person' => $user->name,
+            'name' => $data['title'],
+            'content' => $data['content'],
+            'type' => $type,
+        ), function ($msg) use ($data, $user) {
+            $msg->to($user->email, env('typeNotifi.1'))->subject(env('typeNotifi.1') . " " . $data['title']);
+        });
     }
 }

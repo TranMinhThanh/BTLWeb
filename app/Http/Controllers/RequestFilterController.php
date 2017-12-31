@@ -37,5 +37,4 @@ class RequestFilterController extends RequestController
             return view('filter', $data);
         }
     }
-
 }

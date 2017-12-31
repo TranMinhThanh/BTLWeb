@@ -47,7 +47,7 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        return Validator::make($data, [
+        $error = Validator::make($data, [
             'name' => 'required|string|max:255',
             'user_id' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
@@ -55,6 +55,14 @@ class RegisterController extends Controller
             'level' => 'required',
             'password' => 'required|string|min:6|confirmed',
         ]);
+//       dump($error);
+//        if($data['level'] != 0){
+//            $teamError = Validator::make($data,[
+//                'team'=> 'required',
+//            ]);
+//        //    $error = array_merge($error,$teamError);
+//        }
+        return $error;
     }
 
     /**

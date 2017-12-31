@@ -18,54 +18,89 @@ use Mail;
 class RequestEditController extends RequestController
 {
     //
+    protected $redirectTo = '/editRequest/';
+
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function getEditView(){
+    public function getEditView($id){
         // 1.lay thong tin của request
         // 2.fill vào view -> return view('editRequest', $data);
         $teams = Team::all();
-      //  $data  = Request::find();
-        $data['teams'] = $teams;
-        return view('editRequest',$data);
+        $request  = \App\Request::find($id);
+        $request->load('create_by');
+//        dd($request['relations']['create_by']);
+        $request->load('assign_to');
+        $request->load('team');
 
+        $relaters = Relater::all()->where('request_id',$request['id']);
+        $relaters->load('user_id');
+        $data['teams'] = $teams;
+        $data['request'] = $request;
+        $data['relaters'] = $relaters;
+
+        if (Auth::id() == $request['relations']['create_by']->id || Auth::user()->level == 2|| Auth::user()->level == 3) {
+                return view('editRequest', $data);
+        }
+        else if(!empty($request['relations']['assign_to'])){
+            if(Auth::id() == $request['relations']['assign_to']->id){
+                return view('editRequest', $data);
+            }
+        }
+        else {
+            foreach ($relaters as $relater) {
+                if (Auth::id() == $relater['relations']['user_id']->id) {
+                    return view('editRequest', $data);
+                }
+            }
+        }
+            return view('home');
     }
     protected function editValidator(array $data){
         return Validator::make($data,[
+            'id' => 'required|int',
             'priority' => 'required|int|min:1|max:6',
             'deadline' => 'required|date',
             'team' => 'required',
             'status' => 'required',
         ]);
     }
-    public function editRequest(Request $request,$id){
+    public function editRequest(Request $request){
         $data =$request->all();
         $this ->editValidator($data)->validate();
-        $this->edit($data,$id);
+        $this->edit($data,$data['id']);
+        return redirect($this->redirectTo.$data['id']);
+
     }
 
     protected function edit(array $data,$id){
-        $news = Request::find($id);
-        $news->priority = $data['priority'];
-        $news->deadline = $data['deadline'];
-        $news->assigned_to = $data['assigned_to'];
-        $news->team_id = $data['team'];
-        $news->status = $data['status'];
+        $request = \App\Request::find($id);
+        $request->priority = $data['priority'];
+        $request->deadline = $data['deadline'];
+        if (array_key_exists('assigned_to',$data))
+            $request->assign_to = $data['assigned_to'];
+        $request->team_id = $data['team'];
+        $request->status = $data['status'];
         //cap nhat bang trung gian
-        // $news->relater()->sync($data['relater']);
-        $news->save();
-        if (!emptyArray($data['relater'])){
-            $oldRelaters = Relater::where('user-id', $id)->delete();
-            foreach ($data['relater'] as $relater) {
-                Relater::creat([$id,$relater]);
-                $email = User::find($relater)->email;
-                Mail::send('Notifi.mailNotifi', array('type' => env('typeNotifi.1'), 'person' => Auth::user()->name, 'name' => $data['title'], 'content' => $data['content']), function ($msg) use($email) {
-                    $msg->from(env('MAIL_USERNAME'), 'btlweb');
-                    $msg->to($email, env('typeNotifi.1'));
-                });
-            }
+        // $request->relater()->sync($data['relater']);
+        $request->save();
+
+        //update relater
+        $relaters = Relater::all()->where('request_id',$id);
+        $relaterIds = [];
+        foreach ($relaters as $relater){
+            $relaterIds []= $relater['user_id'];
         }
+        $newRelaterIds = $this->getRelaterId($data['relater']);
+        $diffRelaters = array_diff($relaterIds,$newRelaterIds);
+        $diffNewRelaters = array_diff($newRelaterIds,$relaterIds);
+        foreach ($diffRelaters as $diffRelater)
+            Relater::where('user_id', $diffRelater)->delete();
+        foreach ($diffNewRelaters as $diffNewRelater)
+            RelaterController::create($id,$diffNewRelater);
+
+
     }
 }

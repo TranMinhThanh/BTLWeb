@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Relater;
-use App\User;
-use Illuminate\Http\Request;
 
 class RelaterController extends Controller
 {
     //
-    public function create(\App\Request $requestId, User $userId){
-        return Relater::create([
+    public static function create($requestId, $userId){
+        //check đã có relater hay chưa
+        if (Relater::all()->where('request_id',$requestId)->where('user_id',$userId)->isEmpty())
+            return Relater::create([
             'request_id' => $requestId,
             'user_id' => $userId,
         ]);
