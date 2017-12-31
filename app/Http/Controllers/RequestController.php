@@ -54,7 +54,7 @@ class RequestController extends Controller
         $this->validator($data)->validate();
         $newRequest = $this->create($data, $relaterIds);
         // xu ly luu anh
-        $images = $request->file("file");
+        $images = $request->file('file');
         if(!empty($images)){
             foreach ($images as $image){
                 $imageCtrl = new ImageController();

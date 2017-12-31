@@ -7,40 +7,49 @@
  */
 namespace App\Http\Controllers;
 
+use App\Image;
 use App\Relater;
 use App\Team;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Tests\TestCase;
 use Mail;
 class RequestEditController extends RequestController
 {
-    //
+
     protected $redirectTo = '/editRequest/';
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
+    public function getImage($filename){
+        $file = Storage::get($filename);     //The filename is stored in a database.
+        return response($file, 200)->header('Content-Type', 'image/jpeg');
+}
+
     public function getEditView($id){
         // 1.lay thong tin của request
         // 2.fill vào view -> return view('editRequest', $data);
         $teams = Team::all();
         $request  = \App\Request::find($id);
         $request->load('create_by');
-//        dd($request['relations']['create_by']);
         $request->load('assign_to');
         $request->load('team');
 
         $relaters = Relater::all()->where('request_id',$request['id']);
         $relaters->load('user_id');
+
+        $images = Image::all()->where('request_id',$id);
+      //  dd($images);
+        $urlImage=[];
+        foreach ($images as $image){
+            $urlImage[]= $image->url_image;
+        }
+
         $data['teams'] = $teams;
         $data['request'] = $request;
         $data['relaters'] = $relaters;
-
+        $data['images'] =$urlImage;
         if (Auth::id() == $request['relations']['create_by']->id || Auth::user()->level == 2|| Auth::user()->level == 3) {
                 return view('editRequest', $data);
         }
