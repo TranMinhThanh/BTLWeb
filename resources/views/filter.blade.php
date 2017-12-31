@@ -64,6 +64,8 @@
                     <?php } ?>
                 </tbody>
             </table>
+            <?php echo $requests->render(); ?>
         </div>
+
     </div>
 @endsection

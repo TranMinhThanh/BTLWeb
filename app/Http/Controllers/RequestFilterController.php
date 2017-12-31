@@ -10,7 +10,7 @@ class RequestFilterController extends RequestController
 {
     public static function myRequest(Request $rq, $kindOfRequests, $status){
         if ($rq->ajax() || 'NULL') {
-            $requests = \App\Request::all();
+            $requests = \App\Request::paginate(20);
 
             if (env($kindOfRequests) == 0)
                 $requests = $requests->where('create_by',Auth::id());

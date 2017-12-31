@@ -79,8 +79,12 @@ class RequestEditController extends RequestController
         $request = \App\Request::find($id);
         $request->priority = $data['priority'];
         $request->deadline = $data['deadline'];
-        if (array_key_exists('assigned_to',$data))
-            $request->assign_to = $data['assigned_to'];
+        if (array_key_exists('assigned_to',$data)){
+            $assignUser = $this->getUserIds($data['assigned_to']);
+            if ($request->assigned_to != $assignUser[0])
+                $request->assigned_to = $assignUser[0];
+        }
+
         $request->team_id = $data['team'];
         $request->status = $data['status'];
         //cap nhat bang trung gian
@@ -93,7 +97,7 @@ class RequestEditController extends RequestController
         foreach ($relaters as $relater){
             $relaterIds []= $relater['user_id'];
         }
-        $newRelaterIds = $this->getRelaterId($data['relater']);
+        $newRelaterIds = $this->getUserIds($data['relater']);
         $diffRelaters = array_diff($relaterIds,$newRelaterIds);
         $diffNewRelaters = array_diff($newRelaterIds,$relaterIds);
         foreach ($diffRelaters as $diffRelater)
@@ -101,6 +105,8 @@ class RequestEditController extends RequestController
         foreach ($diffNewRelaters as $diffNewRelater)
             RelaterController::create($id,$diffNewRelater);
 
+        //send mail
+        $this->sendMail($request, 2);
 
     }
 }
