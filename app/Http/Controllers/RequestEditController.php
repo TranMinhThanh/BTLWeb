@@ -51,16 +51,19 @@ class RequestEditController extends RequestController
         $data['relaters'] = $relaters;
         $data['images'] =$urlImage;
         if (Auth::id() == $request['relations']['create_by']->id || Auth::user()->level == 2|| Auth::user()->level == 3) {
-                return view('editRequest', $data);
+            ReadController::checkRead($id,Auth::id());
+            return view('editRequest', $data);
         }
         else if(!empty($request['relations']['assign_to'])){
             if(Auth::id() == $request['relations']['assign_to']->id){
+                ReadController::checkRead($id,Auth::id());
                 return view('editRequest', $data);
             }
         }
         else {
             foreach ($relaters as $relater) {
                 if (Auth::id() == $relater['relations']['user_id']->id) {
+                    ReadController::checkRead($id,Auth::id());
                     return view('editRequest', $data);
                 }
             }
@@ -113,7 +116,7 @@ class RequestEditController extends RequestController
             Relater::where('user_id', $diffRelater)->delete();
         foreach ($diffNewRelaters as $diffNewRelater)
             RelaterController::create($id,$diffNewRelater);
-
+        ReadController::create($id);
         //send mail
         $this->sendMail($request, 2);
 

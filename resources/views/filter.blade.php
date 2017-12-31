@@ -64,10 +64,11 @@
                     <?php } ?>
                 </tbody>
             </table>
-            <?php
-                if (get_class($requests) != "Illuminate\Database\Eloquent\Collection")
-                    echo $requests->render();
-                ?>
+<!--            -->
+{{--//                if (get_class($requests) != "Illuminate\Database\Eloquent\Collection")--}}
+                    {{ $requests->render() }}
+{{--//                    echo $requests->links();--}}
+                {{--?>--}}
         </div>
 
     </div>

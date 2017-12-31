@@ -61,6 +61,7 @@ class RequestController extends Controller
                 $imageCtrl->storeImage($newRequest,$image);
             }
         }
+        ReadController::create($newRequest);
         $this->sendMail($newRequest,1);
         return redirect($this->redirectTo);
     }
