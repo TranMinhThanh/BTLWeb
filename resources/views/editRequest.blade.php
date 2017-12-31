@@ -17,12 +17,13 @@
             <div class="panel-heading ">
                 <label class="h4 col-md-7"><span class="glyphicon glyphicon-globe"></span>{{ $request->title }}</label>
                 <div class="btn-toolbar">
-                    <button type="button" class=" btn btn-default" title="Thay đổi bộ phận IT" onclick="edit('#team')"><span class="glyphicon glyphicon glyphicon-cd small "></span></button>
-                    <button type="button" class=" btn btn-default" title="Thay đổi mức độ ưu tiên" onclick="edit('#priority')"><span class="glyphicon glyphicon-retweet small"></span></button>
-                    <button type="button" class=" btn btn-default" title="Thay đổi deadline" onclick="edit('#deadline')"><span class="glyphicon glyphicon-calendar small"></span></button>
-                    <button type="button" class=" btn btn-default" title="Assign" onclick="edit('#assigned_to')" id="buttonAssignEdit"><span class="glyphicon glyphicon-hand-right small"></span></button>
-                    <button type="button" class=" btn btn-default" title="Thay đổi người liên quan" onclick="edit('#relater')"><span class="glyphicon glyphicon-user small"></span></button>
-                    <button type="button" class=" btn btn-default" title="Thay đổi trạng thái" onclick="edit('#status')"><span class="glyphicon glyphicon-transfer"></span></button>
+                    <button type="button" class=" btn btn-default" title="Thay đổi bộ phận IT" onclick="edit('#team')" id="buttonEditTeam"><span class="glyphicon glyphicon glyphicon-cd small "></span></button>
+                    <button type="button" class=" btn btn-default" title="Thay đổi mức độ ưu tiên" onclick="edit('#priority')" id="buttonEditPri"><span class="glyphicon glyphicon-retweet small"></span></button>
+                    <button type="button" class=" btn btn-default" title="Thay đổi deadline" onclick="edit('#deadline')" id="'buttonEditDeadline"><span class="glyphicon glyphicon-calendar small"></span></button>
+                    <button type="button" class=" btn btn-default" title="Assign" onclick="edit('#assigned_to')" id="buttonEditAssigned"><span class="glyphicon glyphicon-hand-right small"></span></button>
+                    <button type="button" class=" btn btn-default" title="Thay đổi người liên quan" onclick="edit('#relater')" id="buttonEditRelater"><span class="glyphicon glyphicon-user small"></span></button>
+                    <button type="button" class=" btn btn-default" title="Thay đổi trạng thái" onclick="edit('#status')" id="buttonEditStatus"><span class="glyphicon glyphicon-transfer"></span></button>
+                    <button type="button" class=" btn btn-default" title="Thay đổi tất cả" onclick="editAll()"><span class="glyphicon glyphicon-transfer"></span></button>
                 </div>
             </div>
             <div class="panel-body">
@@ -100,7 +101,7 @@
                             <span class="col-md-7">
                                   {{$relatersLabel}}
                             </span>
-                            <input id="relater" name="relater" class="form-control col-md-7" type="text" value="{{$relatersLabel}}">
+                            <input id="relater" name="relater" class="form-control col-md-7" type="text">
 
                             {{--<input id="relater" class="form-control col-md-7" type="text" value = {{$request->relater}} placeholder={{$request->relater}}>--}}
 
@@ -109,15 +110,25 @@
 
 
                     <div class="col-md-12">
-                        <label class="h4 col-offset-2">NỘI DUNG</label>
+                        <label class="col-md-5">NỘI DUNG</label>
                     </div>
                     <div class="col-md-12">
-                        <span>{{ $request->content }}</span>
+                        <textarea type="text" class="form-control" id="content" rows = '10' name="content">{{$request->content}}</textarea>
                     </div>
-                        <div class="btn-toolbar col-md-3 pull-right">
-                        <button type="button" class="btn-primary" style="margin-top: 5px" id="save">save</button>
-                        <button type="button" class="btn-primary " style="margin-top: 5px" id="cancel" >cancel</button>
-                        </div>
+                    <div class="btn-toolbar col-md-3 pull-right">
+                    <button type="button" class="btn btn-primary" style="margin-top: 5px" id="save">save</button>
+                    <button type="button" class="btn btn-primary " style="margin-top: 5px" id="cancel" >cancel</button>
+                    </div>
+                    <div>
+                        <?php
+                        //hien thi anh
+                        foreach ($images as $image){
+                            ?>
+                            <img src="{{url('/image/'.$image)}}" width="200" height="200">
+                        <?php
+                        }
+                        ?>
+                    </div>
                 </form>
             </div>
         </div>
@@ -136,7 +147,7 @@
                 </div>
                 <div >
                     <form id="comment">
-                        <textarea type="text" class="form-control" id="requestContent" rows = '10' name="comment" ></textarea>
+                        <textarea type="text" class="form-control" id="requestComment" rows = '10' name="comment" ></textarea>
                         {{ csrf_field() }}
                     </form>
                 </div>
@@ -156,9 +167,12 @@
             $('#save').click(save);
             $('#cancel').hide();
             $('#cancel').click(cancel);
+          //  $('#content').attr('disabled',true);
+
+            $('#content').attr('readonly',true);
 
             if('{{Auth::user()->level}}' !=3 && '{{Auth::user()->level}}' !=2 ){
-                $("#buttonAssignEdit").hide();
+                $("#buttonEditAssigned").hide();
             }
         });
 
@@ -195,6 +209,7 @@
 
         $( "#relater")
             .on("keydown", function( event ) {
+                //document.write("sdfasd");
                 if ( event.keyCode === 9 &&
                     $(this).autocomplete( "instance" ).menu.active ) {
                     event.preventDefault();
@@ -222,6 +237,18 @@
                     return false;
                 }
             });
+
+        function editAll(){
+            $('#buttonEditTeam').click();
+            $('#buttonEditStatus').click();
+            $('#buttonEditPri').click();
+            $('#buttonEditRelater').click();
+            $('#buttonEditDeadline').click();
+            $('#buttonEditAssigned').click();
+            $('#content').attr('readonly',false);
+            $('#content').attr('placeholder',$('#content').val());
+            $('#content').val('');
+        }
 
 
         function edit(id){
@@ -267,6 +294,11 @@
                 $('#status').val($('#status').prev().val());
                 $('#status').hide();
                 $('#status').prev().show();
+            }
+            if($('#content').is(':visible')){
+                $('#content').val('{{$request->content}}');
+             //   $('#status').disabled;
+                $('#content').attr('readonly',true);
             }
 
             $('#save').hide();
