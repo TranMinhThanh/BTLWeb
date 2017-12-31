@@ -111,7 +111,7 @@
             .autocomplete({
                 source: function( request, response ) {
                     $.getJSON( "{{url('search/autocomplete/createRequest/0')}}", {
-                        term: extractLast( request.term )
+                        term: request.term
                     }, response );
                 },
                 focus: function() {
@@ -119,7 +119,7 @@
                     return false;
                 },
                 select: function( event, ui ) {
-                    var terms = split( this.value );
+                    var terms = this.value.split(/,\s*/);
                     // remove the current input
                     terms.pop();
                     // add the selected item
@@ -131,12 +131,6 @@
                 }
 
             });
-        function extractLast( term ) {
-            return split( term ).pop();
-        }
-        function split( val ) {
-            return val.split( /,\s*/ );
-        }
     </script>
 @endsection
 @section('script')
