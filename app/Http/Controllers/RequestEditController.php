@@ -75,7 +75,7 @@ class RequestEditController extends RequestController
         $relaters = Relater::all()->where('request_id',$id);
         $relaterIds = [];
         foreach ($relaters as $relater){
-            $relaterIds []= $relater['id'];
+            $relaterIds []= $relater['user_id'];
         }
         $newRelaterIds = $this->getRelaterId($data['relater']);
         $diffRelaters = array_diff($relaterIds,$newRelaterIds);

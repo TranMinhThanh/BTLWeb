@@ -156,39 +156,39 @@
             $('#save').click(save);
             $('#cancel').hide();
             $('#cancel').click(cancel);
-
-            $( "#relater")
-                .on("keydown", function( event ) {
-                    //document.write("sdfasd");
-                    if ( event.keyCode === 9 &&
-                        $(this).autocomplete( "instance" ).menu.active ) {
-                        event.preventDefault();
-                    }
-                })
-                .autocomplete({
-                    source: function( request, response ) {
-                        $.getJSON( '{{url('search/autocomplete/editRequest/'.$request->id)}}', {
-                            term: extractLast( request.term )
-                        }, response );
-                    },
-                    focus: function() {
-                        // prevent value inserted on focus
-                        return false;
-                    },
-                    select: function( event, ui ) {
-                        var terms = this.value.split(/,\s*/);
-                        // remove the current input
-                        terms.pop();
-                        // add the selected item
-                        terms.push( ui.item.value );
-                        // add placeholder to get the comma-and-space at the end
-                        terms.push( "" );
-                        this.value = terms.join( ", " );
-                        return false;
-                    }
-                });
-
         });
+
+        $( "#relater")
+            .on("keydown", function( event ) {
+                //document.write("sdfasd");
+                if ( event.keyCode === 9 &&
+                    $(this).autocomplete( "instance" ).menu.active ) {
+                    event.preventDefault();
+                }
+            })
+            .autocomplete({
+                source: function( request, response ) {
+                    $.getJSON( '{{url('search/autocomplete/editRequest/'.$request->id)}}', {
+                        term: request.term
+                    }, response );
+                },
+                focus: function() {
+                    // prevent value inserted on focus
+                    return false;
+                },
+                select: function( event, ui ) {
+                    var terms = this.value.split(/,\s*/);
+                    // remove the current input
+                    terms.pop();
+                    // add the selected item
+                    terms.push( ui.item.value );
+                    // add placeholder to get the comma-and-space at the end
+                    terms.push( "" );
+                    this.value = terms.join( ", " );
+                    return false;
+                }
+            });
+
 
         function edit(id){
             $(id).prev().hide();
