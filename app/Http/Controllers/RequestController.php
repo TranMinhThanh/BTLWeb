@@ -50,7 +50,7 @@ class RequestController extends Controller
     public function createRequest(Request $request)
     {
         $data = $request->all();
-        $relaterIds = $this->getRelaterId($request['relater']);
+        $relaterIds = $this->getUserIds($request['relater']);
         $this->validator($data)->validate();
         $newRequest = $this->create($data, $relaterIds);
         // xu ly luu anh
@@ -61,12 +61,13 @@ class RequestController extends Controller
                 $imageCtrl->storeImage($newRequest,$image);
             }
         }
+        ReadController::create($newRequest);
         $this->sendMail($newRequest,1);
         return redirect($this->redirectTo);
     }
 
     //lay id cua nguoi lien quan
-    protected function getRelaterId($data){
+    protected function getUserIds($data){
         $relaterIds = [];
         if (!empty($data)) {
             $arrayRelater = explode(',', $data);
@@ -126,7 +127,7 @@ class RequestController extends Controller
 
         //mail cho người thực hiện (nếu có)
         if (!is_null($data['assign_to'])){
-            $this->mail($data, User::find($data['assign_to']),$type);
+            $this->mail($data, User::find($data['assigned_to']),$type);
         }
 
         //mail cho người liên quan

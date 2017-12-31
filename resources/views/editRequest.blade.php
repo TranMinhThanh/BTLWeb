@@ -43,8 +43,8 @@
 
                         <div class="col-md-6">
                             <label class="col-md-5">Người thực hiện:</label>
-                            <span class="col-md-7">{{$request['relations']['assign_to'] == null ? '' : $request['relations']['assign_to']->name}}</span>
-                            <input id="assigned_to" class="form-control col-md-7" type="text" placeholder="Người xử lý công việc" value={{$request['relations']['assign_to'] == null ? '' : $request['relations']['assign_to']->name}}>
+                            <span class="col-md-7">{{$request['relations']['assign_to'] == null ? '' : $request['relations']['assign_to']->name.'['.$request['relations']['assign_to']->user_id.']'}}</span>
+                            <input id="assigned_to" name="assigned_to" class="form-control col-md-7" type="text" placeholder="Người xử lý công việc" value={{$request['relations']['assign_to'] == null ? '' : $request['relations']['assign_to']->name.'['.$request['relations']['assign_to']->user_id.']'}}>
                         </div>
                     </div>
                     <div class="row ">
@@ -87,13 +87,13 @@
                         </div>
                         <div class="col-md-6">
                             <label class="col-md-5">Người liên quan</label>
-
+                            <?php
+                                $relatersLabel = '';
+                            foreach ($relaters as $relater){
+                                $relatersLabel = $relatersLabel.$relater['relations']['user_id']->name.'['.$relater['relations']['user_id']->user_id.'],';
+                            } ?>
                             <span class="col-md-7">
-                                  <?php
-                                    foreach ($relaters as $relater){
-                                  ?>
-                                        {{$relater['relations']['user_id']->name.'['.$relater['relations']['user_id']->user_id.'],'}}
-                                  <?php } ?>
+                                  {{$relatersLabel}}
                             </span>
                             <input id="relater" name="relater" class="form-control col-md-7" type="text">
 
@@ -190,6 +190,38 @@
                 {{--displayComment("fasdfd",'{{Auth::user()->name}}',date,$('#requestComment').val());--}}
             });
         });
+
+        $( "#assigned_to")
+            .on("keydown", function (event) {
+                if ( event.keyCode === 9 &&
+                    $(this).autocomplete( "instance").menu.active ) {
+                    event.preventDefault();
+                }
+            })
+            .autocomplete({
+                source: function( request, response ) {
+                    $.getJSON( '{{url('search/autocomplete/assignTo/'.$request->id)}}', {
+                        term: request.term
+                    }, response );
+                },
+                focus: function() {
+                    // prevent value inserted on focus
+                    return false;
+                },
+                select: function( event, ui ) {
+                    // var terms = this.value.split();
+                    // // remove the current input
+                    // terms.pop();
+                    // // add the selected item
+                    // terms.push( ui.item.value );
+                    // // add placeholder to get the comma-and-space at the end
+                    // terms.push( "" );
+                    // this.value = terms.join( ", " );
+                    // return false;
+                    return true;
+                }
+            });
+
         $( "#relater")
             .on("keydown", function( event ) {
                 //document.write("sdfasd");

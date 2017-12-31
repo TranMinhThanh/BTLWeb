@@ -17,6 +17,10 @@ class SearchController extends Controller
 
     public function autocomplete(Request $request, $type, $id)
     {
+//        if ($type == "assignTo") {
+//            $results = assignAutoComplete($request, $id);
+//            return response()->json($results);
+//        }
         $term = $request->term;
         $input = explode(",",$term);
         $len = count($input);
@@ -24,7 +28,7 @@ class SearchController extends Controller
         foreach ($input as $item)
             $preItems []= $item;
         $preIput = implode(',', $preItems);
-        $preUserIds = $this->getRelaterId($preIput);
+        $preUserIds = $this->getUserIds($preIput);
 
         $findElement = trim($input[$len-1]," ");
 
@@ -34,12 +38,14 @@ class SearchController extends Controller
         if($type == "createRequest") {
             $queries = $queries->where('id', '<>', Auth::id());
         }
-        else{
-            if($type == 'editRequest'){
+        else if($type == 'editRequest'){
                 $req = \App\Request::find($id);
                 $createUser = $req->create_by;
                 $queries = $queries->where('id', '<>', $createUser);
-            }
+        }
+        else if ($type == 'assignTo'){
+            $req = \App\Request::find($id);
+            $queries = $queries->where('team_id', $req['team_id']);
         }
         foreach ($preUserIds as $preUserId)
             $queries = $queries->where('id','<>',$preUserId);
@@ -52,7 +58,7 @@ class SearchController extends Controller
     }
 
     // copy from RequestController
-    protected function getRelaterId($data){
+    protected function getUserIds($data){
         $relaterIds = [];
         if (!empty($data)) {
             $arrayRelater = explode(',', $data);
@@ -70,5 +76,17 @@ class SearchController extends Controller
             }
         }
         return $relaterIds;
+    }
+
+    public function assignAutoComplete(Request $request, $id){
+        $rq = \App\Request::find($id);
+        $term = trim($request->term, " ");
+        $results = [];
+        $queries = User::where('name', 'LIKE', '%' . $term . '%');
+        $queries = $queries->where('team_id', $rq->team_id)->take(5)->get();
+        foreach ($queries as $query => $value){
+            $results[] = ['id' => $value->id, 'value' => $value->name . "[" . $value->user_id . "]"];
+        }
+        return $results;
     }
 }

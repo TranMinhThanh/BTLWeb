@@ -64,6 +64,12 @@
                     <?php } ?>
                 </tbody>
             </table>
+<!--            -->
+{{--//                if (get_class($requests) != "Illuminate\Database\Eloquent\Collection")--}}
+                    {{ $requests->render() }}
+{{--//                    echo $requests->links();--}}
+                {{--?>--}}
         </div>
+
     </div>
 @endsection
