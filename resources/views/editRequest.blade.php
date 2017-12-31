@@ -4,13 +4,7 @@
 
     <script src= {{ asset('js/ajax/libs/jquery/jquery.min.js') }}></script>
     <script src= {{ asset('js/ajax/libs/jqueryui/jquery-ui.min.js') }}></script>
-    {{--<style>--}}
-        {{--.ui-autocomplete-loading {--}}
-            {{--background: white url("images/ui-anim_basic_16x16.gif") right center no-repeat;--}}
-        {{--}--}}
-        {{--</style>--}}
 @endsection
-
 @section('child_content')
     <div id ="editRequest" class="container-fluid">
         <div class=" panel panel-default" >
@@ -19,7 +13,7 @@
                 <div class="btn-toolbar">
                     <button type="button" class=" btn btn-default" title="Thay đổi bộ phận IT" onclick="edit('#team')" id="buttonEditTeam"><span class="glyphicon glyphicon glyphicon-cd small "></span></button>
                     <button type="button" class=" btn btn-default" title="Thay đổi mức độ ưu tiên" onclick="edit('#priority')" id="buttonEditPri"><span class="glyphicon glyphicon-retweet small"></span></button>
-                    <button type="button" class=" btn btn-default" title="Thay đổi deadline" onclick="edit('#deadline')" id="'buttonEditDeadline"><span class="glyphicon glyphicon-calendar small"></span></button>
+                    <button type="button" class=" btn btn-default" title="Thay đổi deadline" onclick="edit('#deadline')" id="buttonEditDeadline"><span class="glyphicon glyphicon-calendar small"></span></button>
                     <button type="button" class=" btn btn-default" title="Assign" onclick="edit('#assigned_to')" id="buttonEditAssigned"><span class="glyphicon glyphicon-hand-right small"></span></button>
                     <button type="button" class=" btn btn-default" title="Thay đổi người liên quan" onclick="edit('#relater')" id="buttonEditRelater"><span class="glyphicon glyphicon-user small"></span></button>
                     <button type="button" class=" btn btn-default" title="Thay đổi trạng thái" onclick="edit('#status')" id="buttonEditStatus"><span class="glyphicon glyphicon-transfer"></span></button>
@@ -110,7 +104,7 @@
 
 
                     <div class="col-md-12">
-                        <label class="cok=md-5">NỘI DUNG</label>
+                        <label class="col-md-5">NỘI DUNG</label>
                     </div>
                     <div class="col-md-12">
                         <textarea type="text" class="form-control" id="content" rows = '10' name="content">{{$request->content}}</textarea>
@@ -133,25 +127,34 @@
             </div>
         </div>
         <div class="panel panel-default">
-            <div class="panel panel-body col-md-12">
-                <a href="#">Hiển thị thêm bình luận</a>
+            <div class="panel panel-body col-md-12" id="displayComment">
+
+               <a href="#">Hiển thị thêm bình luận</a>
+                 {{--khi bình luận xong thì bình luật sẽ đươc hiển thị nối vào đây--}}
+<!--                -->
+                <?php
+//                    foreach ($comments as $comment){
+//                        //in ra nguoi comment va moi dung comment
+//                }?>
             </div>
             <div class=" panel panel-body">
                 <div ><label class="control-label h4"><span class="glyphicon glyphicon-edit"></span>Binh luan</label></div>
-                <div>
-                    <ul class="nav nav-pills">
-                        <li ><a>Bold</a></li>
-                        <li><a>Italic</a></li>
-                        <li><a>Messages</a></li>
-                    </ul>
-                </div>
+                {{--<div>--}}
+                    {{--<ul class="nav nav-pills">--}}
+                        {{--<li ><a>Bold</a></li>--}}
+                        {{--<li><a>Italic</a></li>--}}
+                        {{--<li><a>Messages</a></li>--}}
+                    {{--</ul>--}}
+                {{--</div>--}}
                 <div >
                     <form id="comment">
-                        <textarea type="text" class="form-control" id="requestComment" rows = '10' name="comment" ></textarea>
                         {{ csrf_field() }}
+                        <textarea type="text" class="form-control" id="requestComment" name="comment" ></textarea>
                     </form>
                 </div>
-                <button class="btn btn-primary">Bình luận</button>
+                <div class="btn-toolbar col-md-3 pull-right">
+                    <button class="btn btn-primary" style="margin: 5px" onclick="comment()">Bình luận</button>
+                </div>
             </div>
         </div>
     </div>
@@ -167,13 +170,25 @@
             $('#save').click(save);
             $('#cancel').hide();
             $('#cancel').click(cancel);
-          //  $('#content').attr('disabled',true);
-
             $('#content').attr('readonly',true);
 
             if('{{Auth::user()->level}}' !=3 && '{{Auth::user()->level}}' !=2 ){
                 $("#buttonEditAssigned").hide();
             }
+            $("#comment").submit(function(e){
+                e.preventDefault();
+                var info = [];
+                info['id']='{{$request->id}}';
+                info['comment']=$(this).val();
+                alert("sfd");
+                $.post('{{route('comment')}}',info,function(smg){
+                    if(smg['status']){
+                        // alert("dfd");
+                        // $("#displayComment")
+                    }
+                });
+                {{--displayComment("fasdfd",'{{Auth::user()->name}}',date,$('#requestComment').val());--}}
+            });
         });
         $( "#relater")
             .on("keydown", function( event ) {
@@ -205,16 +220,6 @@
                     return false;
                 }
             });
-        function blurContent(event){
-             if(event.data.param1 == false) {
-                $('#content').blur();
-                document.write("sfd");
-             }
-             else{
-                 $('#content').focus();
-                 //document.write("dfsd");
-             }
-        }
 
         function editAll(){
             $('#buttonEditTeam').click();
@@ -226,6 +231,9 @@
             $('#content').attr('readonly',false);
             $('#content').attr('placeholder',$('#content').val());
             $('#content').val('');
+            $('#content').attr('required', true);
+
+
         }
 
 
@@ -278,7 +286,6 @@
              //   $('#status').disabled;
                 $('#content').attr('readonly',true);
             }
-
             $('#save').hide();
             $('#cancel').hide();
         }
@@ -287,8 +294,49 @@
                 $('#editForm').submit();
             }
         }
+
         function comment(){
+            //1. gui va lay ajax
+            //2. fill len view
+            var currentDate = new Date();
+            var date = currentDate.getDay()+'/'+currentDate.getMonth()+'/'+currentDate.getFullYear();
+            displayComment("fasdfd",'{{Auth::user()->name}}',date,$('#requestComment').val());
+            {{--$("#comment").submit(function(e){--}}
+                {{--e.preventDefault();--}}
+                {{--var info = [];--}}
+                {{--info['id']='{{$request->id}}';--}}
+                {{--info['comment']=$(this).val();--}}
+                {{--alert("sfd");--}}
+                {{--$.post('{{route('comment')}}',info,function(smg){--}}
+                    {{--if(smg['status']){--}}
+                        {{--alert("dfd");--}}
+                        {{--$("#displayComment")--}}
+                    {{--}--}}
+                {{--});--}}
+                {{--displayComment("fasdfd",'{{Auth::user()->name}}',date,$('#requestComment').val());--}}
+            {{--});--}}
             $('#comment').submit();
+
+        }
+        function displayComment(picture,userName ,createDate, content){
+            // tao 1 pictuer
+             var avata = document.createElement('img');
+            // $(avata).attr('src','image/'.picture);
+            var user = document.createElement('label');
+            $(user).html(userName);
+            var date = document.createElement('time');
+            $(date).html(createDate);
+            $(date).css({fontSize:"12px", padding:"5px"});
+            var comment = document.createElement('div');
+            $(comment).attr('class','col-md-11 col-md-offser-1');
+            $(comment).html(content);
+            var display = document.createElement('div');
+            $(display).attr('class','col-md-11 col-md-offser-1');
+            $(display).append(avata);
+            $(display).append(user);
+            $(display).append(date);
+            $(display).append(comment);
+            $("#displayComment").append(display);
         }
     </script>
 @endsection

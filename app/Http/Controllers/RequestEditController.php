@@ -92,6 +92,8 @@ class RequestEditController extends RequestController
             $request->assign_to = $data['assigned_to'];
         $request->team_id = $data['team'];
         $request->status = $data['status'];
+        //them noi dung
+        $request->content = $data['content'];
         //cap nhat bang trung gian
         // $request->relater()->sync($data['relater']);
         $request->save();
