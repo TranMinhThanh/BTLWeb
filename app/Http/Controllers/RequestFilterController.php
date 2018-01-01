@@ -44,12 +44,6 @@ class RequestFilterController extends RequestController
             $requests->with('team');
             $requests = $requests->paginate(20);
 
-            foreach ($requests->items() as $request){
-                if ($request->deadline < Carbon::now()) {
-                    $request->status = 4;
-                    $request->save();
-                }
-            }
             $data['requests'] = $requests;
             return view('filter', $data);
     }
