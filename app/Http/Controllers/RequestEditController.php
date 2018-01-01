@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 use App\Image;
 use App\Relater;
 use App\Team;
+use App\Thread;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -46,10 +47,16 @@ class RequestEditController extends RequestController
             $urlImage[]= $image->url_image;
         }
 
+        //hiển thị bình luận
+        $comments = Thread::all()->where('request_id',$request['id']);
+        $comments->load('user_id');
+        $comments->load('request_id');
+
         $data['teams'] = $teams;
         $data['request'] = $request;
         $data['relaters'] = $relaters;
         $data['images'] =$urlImage;
+        $data['comments'] = $comments;
         if (Auth::id() == $request['relations']['create_by']->id || Auth::user()->level == 2|| Auth::user()->level == 3) {
             ReadController::checkRead($id,Auth::id());
             return view('editRequest', $data);

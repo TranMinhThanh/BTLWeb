@@ -121,23 +121,23 @@ class RequestController extends Controller
         }
     }
 
-    public function sendMail(\App\Request $data, $type){
+    public static function sendMail(\App\Request $data, $type){
         // mail cho nguoi tao request
-        $this->mail($data, User::find($data['create_by']),$type);
+        RequestController::mail($data, User::find($data['create_by']),$type);
 
         //mail cho người thực hiện (nếu có)
         if (!is_null($data['assign_to'])){
-            $this->mail($data, User::find($data['assigned_to']),$type);
+            RequestController::mail($data, User::find($data['assigned_to']),$type);
         }
 
         //mail cho người liên quan
         $relaters = Relater::all()->where('request_id',$data['id']);
         foreach ($relaters as $relater){
-            $this->mail($data, User::find($relater['user_id']), $type);
+            RequestController::mail($data, User::find($relater['user_id']), $type);
         }
     }
 
-    public function mail(\App\Request $data, User $user, $type){
+    public static function  mail(\App\Request $data, User $user, $type){
         Mail::send('Notifi.mailNotifi', array(
             'person' => $user->name,
             'name' => $data['title'],

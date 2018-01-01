@@ -40,6 +40,5 @@ Route::get('/filter', function () {
 Route::get("/userInfo", 'UserController@getProfile');
 Route::get('search/autocomplete/{type}/{id?}', 'SearchController@autocomplete');
 Route::get('image/{filename?}','RequestEditController@getImage');
-Route::post('comment',
-    [   'as'=>"comment",
-        'user'=>'CommentController@createComment']);
+
+Route::post('comment/store','CommentController@store')->name('comment.store');

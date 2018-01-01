@@ -129,31 +129,56 @@
         <div class="panel panel-default">
             <div class="panel panel-body col-md-12" id="displayComment">
 
-               <a href="#">Hiển thị thêm bình luận</a>
+               {{--<a href="#">Hiển thị thêm bình luận</a>--}}
                  {{--khi bình luận xong thì bình luật sẽ đươc hiển thị nối vào đây--}}
 <!--                -->
-                <?php
-//                    foreach ($comments as $comment){
-//                        //in ra nguoi comment va moi dung comment
-//                }?>
+                   <h3 class="comment-title">
+                       <span class="glyphicon glyphicon-comment">Bình luận</span>
+                   </h3>
+
+                    @foreach($comments as $comment)
+                        <div class="comment">
+                            <div class="row">
+                                <div class="author-info">
+                                    <div class="col-md-1">
+                                        <img src="{{ "https://at-cdn-s01.audiotool.com/2013/05/11/users/guess_audiotool/avatar256x256-709d163bfa4a4ebdb25160d094551c33.jpg"}}" width="50" height="50" alt="">
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="author-name">
+                                            <h4>{{$comment['relations']['user_id']->user_id}}</h4>
+                                            <p class="author-time"> {{$comment->created_at}}</p>
+                                        </div>
+                                    </div>
+                               </div>
+                            </div>
+                            <div class="comment-content">
+                                {{$comment->content}}
+                            </div>
+                            <br>
+                            <br>
+                        </div>
+                   @endforeach
             </div>
             <div class=" panel panel-body">
-                <div ><label class="control-label h4"><span class="glyphicon glyphicon-edit"></span>Binh luan</label></div>
-                {{--<div>--}}
-                    {{--<ul class="nav nav-pills">--}}
-                        {{--<li ><a>Bold</a></li>--}}
-                        {{--<li><a>Italic</a></li>--}}
-                        {{--<li><a>Messages</a></li>--}}
-                    {{--</ul>--}}
-                {{--</div>--}}
-                <div >
-                    <form id="comment">
+
+                <div id="comment-form" style="margin-top:50px;" class="col-md-8 col-md-offset-2">
+                    <form id="comment" method="post" action="{{route("comment.store", $request->id)}}">
+                        {{csrf_field()}}
+                        <input id="request_id" name="request_id" value="{{$request->id}}" hidden>
+                        <input id="user_id" name="user_id" value="{{\Illuminate\Support\Facades\Auth::id()}}" hidden>
+                        <textarea type="text" class="form-control" id="requestComment" name="content" ></textarea>
+                        <div class="btn-toolbar col-md-3 pull-right">
+                            <button class="btn btn-primary" style="margin: 5px" onclick="submit()">Bình luận</button>
+                        </div>
+                    </form>
+
+                    {{--form id="comment">
                         {{ csrf_field() }}
                         <textarea type="text" class="form-control" id="requestComment" name="comment" ></textarea>
                     </form>
                 </div>
                 <div class="btn-toolbar col-md-3 pull-right">
-                    <button class="btn btn-primary" style="margin: 5px" onclick="comment()">Bình luận</button>
+                    <button class="btn btn-primary" style="margin: 5px" onclick="comment()">Bình luận</button>--}}
                 </div>
             </div>
         </div>
@@ -175,20 +200,6 @@
             if('{{Auth::user()->level}}' !=3 && '{{Auth::user()->level}}' !=2 ){
                 $("#buttonEditAssigned").hide();
             }
-            $("#comment").submit(function(e){
-                e.preventDefault();
-                var info = [];
-                info['id']='{{$request->id}}';
-                info['comment']=$(this).val();
-                alert("sfd");
-                $.post('{{route('comment')}}',info,function(smg){
-                    if(smg['status']){
-                        // alert("dfd");
-                        // $("#displayComment")
-                    }
-                });
-                {{--displayComment("fasdfd",'{{Auth::user()->name}}',date,$('#requestComment').val());--}}
-            });
         });
 
         $( "#assigned_to")
@@ -209,15 +220,6 @@
                     return false;
                 },
                 select: function( event, ui ) {
-                    // var terms = this.value.split();
-                    // // remove the current input
-                    // terms.pop();
-                    // // add the selected item
-                    // terms.push( ui.item.value );
-                    // // add placeholder to get the comma-and-space at the end
-                    // terms.push( "" );
-                    // this.value = terms.join( ", " );
-                    // return false;
                     return true;
                 }
             });
@@ -325,50 +327,6 @@
             if(confirm("Bạn có thực sự muốn lưu không?")){
                 $('#editForm').submit();
             }
-        }
-
-        function comment(){
-            //1. gui va lay ajax
-            //2. fill len view
-            var currentDate = new Date();
-            var date = currentDate.getDay()+'/'+currentDate.getMonth()+'/'+currentDate.getFullYear();
-            displayComment("fasdfd",'{{Auth::user()->name}}',date,$('#requestComment').val());
-            {{--$("#comment").submit(function(e){--}}
-                {{--e.preventDefault();--}}
-                {{--var info = [];--}}
-                {{--info['id']='{{$request->id}}';--}}
-                {{--info['comment']=$(this).val();--}}
-                {{--alert("sfd");--}}
-                {{--$.post('{{route('comment')}}',info,function(smg){--}}
-                    {{--if(smg['status']){--}}
-                        {{--alert("dfd");--}}
-                        {{--$("#displayComment")--}}
-                    {{--}--}}
-                {{--});--}}
-                {{--displayComment("fasdfd",'{{Auth::user()->name}}',date,$('#requestComment').val());--}}
-            {{--});--}}
-            $('#comment').submit();
-
-        }
-        function displayComment(picture,userName ,createDate, content){
-            // tao 1 pictuer
-             var avata = document.createElement('img');
-            // $(avata).attr('src','image/'.picture);
-            var user = document.createElement('label');
-            $(user).html(userName);
-            var date = document.createElement('time');
-            $(date).html(createDate);
-            $(date).css({fontSize:"12px", padding:"5px"});
-            var comment = document.createElement('div');
-            $(comment).attr('class','col-md-11 col-md-offser-1');
-            $(comment).html(content);
-            var display = document.createElement('div');
-            $(display).attr('class','col-md-11 col-md-offser-1');
-            $(display).append(avata);
-            $(display).append(user);
-            $(display).append(date);
-            $(display).append(comment);
-            $("#displayComment").append(display);
         }
     </script>
 @endsection
