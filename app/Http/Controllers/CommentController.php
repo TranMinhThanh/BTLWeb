@@ -15,7 +15,6 @@ class CommentController extends Controller
      * @return Response
      */
     public function store(Request $request){
-        dd($request);
         $this->validate($request, array(
             'request_id' => 'required',
             'user_id' => 'required',
