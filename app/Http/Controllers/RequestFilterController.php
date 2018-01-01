@@ -25,7 +25,7 @@ class RequestFilterController extends RequestController
 //                $requests = \App\Request::whereIn('id',$requestList);
             }
             else if (env($kindOfRequests) == 2)
-                $requests = $requests->where('assign_to',Auth::id());
+                $requests = $requests->where('assigned_to',Auth::id());
 //                $requests = \App\Request::where('assigned_to',Auth::id());
             else if (env($kindOfRequests) == 3)
                 $requests = $requests->where('team_id',Auth::user()['team_id']);
