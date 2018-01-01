@@ -11,25 +11,25 @@ class RequestFilterController extends RequestController
 {
     public static function myRequest(Request $rq, $kindOfRequests, $status){
 //            $requests = \App\Request::paginate(20);
-//            $requests = \App\Request::all();
+            $requests = \App\Request::where('id','<>',-1);
             if (env($kindOfRequests) == 0)
-//                $requests = $requests->where('create_by',Auth::id());
-                $requests = \App\Request::where('create_by',Auth::id());
+                $requests = $requests->where('create_by',Auth::id());
+//                $requests = \App\Request::where('create_by',Auth::id());
             else if (env($kindOfRequests) == 1){
                 $requestList = [];
                 $relatersList = Relater::all()->where('user_id',Auth::id());
                 foreach ($relatersList as $relater){
                     $requestList []= $relater['request_id'];
                 }
-//                $requests = $requests->whereIn('id',$requestList);
-                $requests = \App\Request::whereIn('id',$requestList);
+                $requests = $requests->whereIn('id',$requestList);
+//                $requests = \App\Request::whereIn('id',$requestList);
             }
             else if (env($kindOfRequests) == 2)
-//                $requests = $requests->where('assign_to',Auth::id());
-                $requests = \App\Request::where('assigned_to',Auth::id());
+                $requests = $requests->where('assign_to',Auth::id());
+//                $requests = \App\Request::where('assigned_to',Auth::id());
             else if (env($kindOfRequests) == 3)
-//                $requests = $requests->where('team_id',Auth::user()['team_id']);
-                $requests = \App\Request::where('team_id',Auth::user()['team_id']);
+                $requests = $requests->where('team_id',Auth::user()['team_id']);
+//                $requests = \App\Request::where('team_id',Auth::user()['team_id']);
             if (env($status))
                 $requests = $requests->where('status',env($status));
             $requests->with('create_by');

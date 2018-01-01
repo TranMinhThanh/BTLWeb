@@ -11,13 +11,13 @@
             <div class="panel-heading ">
                 <label class="h4 col-md-7"><span class="glyphicon glyphicon-globe"></span>{{ $request->title }}</label>
                 <div class="btn-toolbar">
-                    <button type="button" class=" btn btn-default" title="Thay đổi bộ phận IT" onclick="edit('#team')" id="buttonEditTeam"><span class="glyphicon glyphicon glyphicon-cd small "></span></button>
-                    <button type="button" class=" btn btn-default" title="Thay đổi mức độ ưu tiên" onclick="edit('#priority')" id="buttonEditPri"><span class="glyphicon glyphicon-retweet small"></span></button>
-                    <button type="button" class=" btn btn-default" title="Thay đổi deadline" onclick="edit('#deadline')" id="buttonEditDeadline"><span class="glyphicon glyphicon-calendar small"></span></button>
-                    <button type="button" class=" btn btn-default" title="Assign" onclick="edit('#assigned_to')" id="buttonEditAssigned"><span class="glyphicon glyphicon-hand-right small"></span></button>
-                    <button type="button" class=" btn btn-default" title="Thay đổi người liên quan" onclick="edit('#relater')" id="buttonEditRelater"><span class="glyphicon glyphicon-user small"></span></button>
-                    <button type="button" class=" btn btn-default" title="Thay đổi trạng thái" onclick="edit('#status')" id="buttonEditStatus"><span class="glyphicon glyphicon-transfer"></span></button>
-                    <button type="button" class=" btn btn-default" title="Thay đổi tất cả" onclick="editAll()"><span class="glyphicon glyphicon-transfer"></span></button>
+                    <button type="button" class=" btn btn-default" title="Thay đổi bộ phận IT" onclick="edit('team')" id="buttonEditTeam"><span class="glyphicon glyphicon glyphicon-cd small "></span></button>
+                    <button type="button" class=" btn btn-default" title="Thay đổi mức độ ưu tiên" onclick="edit('priority')" id="buttonEditPri"><span class="glyphicon glyphicon-retweet small"></span></button>
+                    <button type="button" class=" btn btn-default" title="Thay đổi deadline" onclick="edit('deadline')" id="buttonEditDeadline"><span class="glyphicon glyphicon-calendar small"></span></button>
+                    <button type="button" class=" btn btn-default" title="Assign" onclick="edit('assigned_to')" id="buttonEditAssigned"><span class="glyphicon glyphicon-hand-right small"></span></button>
+                    <button type="button" class=" btn btn-default" title="Thay đổi người liên quan" onclick="edit('relater')" id="buttonEditRelater"><span class="glyphicon glyphicon-user small"></span></button>
+                    <button type="button" class=" btn btn-default" title="Thay đổi trạng thái" onclick="edit('status')" id="buttonEditStatus"><span class="glyphicon glyphicon-transfer"></span></button>
+                    {{--<button type="button" class=" btn btn-default" title="Thay đổi tất cả" onclick="editAll()"><span class="glyphicon glyphicon-edit"></span></button>--}}
                 </div>
             </div>
             <div class="panel-body">
@@ -63,10 +63,12 @@
                             <label class="col-md-5">Trạng thái:</label>
                             <span class="col-md-7">{{env('status.'.$request->status)}}</span>
                             <select class="form-control col-md-7" id="status" name="status">
-                                <option value="1">{{env('status.1')}}</option>
-                                <option value="2">{{env('status.2')}}</option>
-                                <option value="3">{{env('status.3')}}</option>
-                                <option value="4">{{env('status.4')}}</option>
+                                <option id='status1' value="1">{{env('status.1')}}</option>
+                                <option id='status2' value="2">{{env('status.2')}}</option>
+                                <option id='status3' value="3">{{env('status.3')}}</option>
+                                <option id='status4' value="4">{{env('status.4')}}</option>
+                                <option id='status5' value="5">{{env('status.5')}}</option>
+                                <option id='status6' value="6">{{env('status.6')}}</option>
                             </select>
                         </div>
                     </div>
@@ -102,23 +104,25 @@
                         </div>
                     </div>
 
-
+                    <div class="row" style="padding-top: 10px">
                     <div class="col-md-12">
                         <label class="col-md-5">NỘI DUNG</label>
                     </div>
-                    <div class="col-md-12">
+                    </div>
+                    <div class="col-md-10 col-md-offset-1">
                         <textarea type="text" class="form-control" id="content" rows = '10' name="content">{{$request->content}}</textarea>
                     </div>
                     <div class="btn-toolbar col-md-3 pull-right">
                     <button type="button" class="btn btn-primary" style="margin-top: 5px" id="save">save</button>
                     <button type="button" class="btn btn-primary " style="margin-top: 5px" id="cancel" >cancel</button>
                     </div>
-                    <div>
+
+                    <div class = "col-md-12">
                         <?php
                         //hien thi anh
                         foreach ($images as $image){
                             ?>
-                            <img src="{{url('/image/'.$image)}}" width="200" height="200">
+                        <a href="{{url('/image/'.$image)}}" title="Nhấn để xem"><img src="{{url('/image/'.$image)}}" width="200" height="200"></a>
                         <?php
                         }
                         ?>
@@ -127,31 +131,32 @@
             </div>
         </div>
         <div class="panel panel-default">
+            <div class="panel panel-headding col-md-12">
+                <h3 class="comment-title">
+                    <span class="glyphicon glyphicon-comment"></span> Bình luận</h3>
+            </div>
             <div class="panel panel-body col-md-12" id="displayComment">
 
                {{--<a href="#">Hiển thị thêm bình luận</a>--}}
                  {{--khi bình luận xong thì bình luật sẽ đươc hiển thị nối vào đây--}}
 <!--                -->
-                   <h3 class="comment-title">
-                       <span class="glyphicon glyphicon-comment">Bình luận</span>
-                   </h3>
 
                     @foreach($comments as $comment)
-                        <div class="comment">
+                        <div class="comment col-md-12">
                             <div class="row">
                                 <div class="author-info">
                                     <div class="col-md-1">
-                                        <img src="{{ "https://at-cdn-s01.audiotool.com/2013/05/11/users/guess_audiotool/avatar256x256-709d163bfa4a4ebdb25160d094551c33.jpg"}}" width="50" height="50" alt="">
+                                        <img src="{{ "https://at-cdn-s01.audiotool.com/2013/05/11/users/guess_audiotool/avatar256x256-709d163bfa4a4ebdb25160d094551c33.jpg"}}" width="50" height="50" alt="" class="img-circle">
                                     </div>
                                     <div class="col-md-9">
                                         <div class="author-name">
-                                            <h4>{{$comment['relations']['user_id']->user_id}}</h4>
-                                            <p class="author-time"> {{$comment->created_at}}</p>
+                                            <label>{{$comment['relations']['user_id']->name}}</label>
+                                            <p class="author-time" style="font-size: 12px "> {{$comment->created_at}}</p>
                                         </div>
                                     </div>
                                </div>
                             </div>
-                            <div class="comment-content">
+                            <div class="comment-content col-md-offset-1">
                                 {{$comment->content}}
                             </div>
                             <br>
@@ -196,9 +201,124 @@
             $('#cancel').hide();
             $('#cancel').click(cancel);
             $('#content').attr('readonly',true);
+            // an tat ca cac nut
+            $('#buttonEditAssigned').hide();
+            $('#buttonEditTeam').hide();
+            $('#buttonEditPri').hide();
+            $('#buttonEditRelater').hide();
+            $('#buttonEditStatus').hide();
+            $('#buttonEditDeadline').hide();
 
-            if('{{Auth::user()->level}}' !=3 && '{{Auth::user()->level}}' !=2 ){
-                $("#buttonEditAssigned").hide();
+            //an commentform
+            $('#comment-form').hide();
+            //  an status
+            $('#status1').hide();
+            $('#status2').hide();
+            $('#status3').hide();
+            $('#status4').hide();
+            $('#status5').hide();
+            $('#status6').hide();
+
+
+            if (('{{Auth::id()}}' == '{{$request->create_by}}') || ((('{{Auth::user()->level}}' ==3) || ('{{Auth::user()->level}}' ==2 ) ) && (('{{$request->status}}' == 1) || ('{{$request->status}}' == 2) )))
+                $("#buttonEditRelater").show();
+            if((('{{Auth::user()->level}}' ==3) || ('{{Auth::user()->level}}' ==2 ) ) && (('{{$request->status}}' == 1) || ('{{$request->status}}' == 2) ))
+            {
+                $("#buttonEditAssigned").show();
+                $("#buttonEditTeam").show();
+                $("#buttonEditDeadline").show();
+                $("#buttonEditRelater").show();
+                $("#buttonEditAssigned").show();
+            }
+
+            //phân quyền cho thay đổi trạng thái
+            if('{{Auth::id()}}' == '{{$request->create_by}}'){
+                $('#buttonEditStatus').show();
+                if('{{$request->status}}' == 1){
+                    $('#status1').show();
+                    $('#status6').show();
+                }
+                if('{{$request->status}}' == 2 ){
+                    $('#status2').show();
+                    $('#status6').show();
+                }
+                if('{{$request->status}}' == 3){
+                    $('#status3').show();
+                    $('#status4').show();
+                    $('#status5').show();
+                    $('#status6').show();
+                }
+                if('{{$request->status}}' == 5){
+                    $('#status4').show();
+                    $('#status5').show();
+                    $('#status6').show();
+                }
+            }
+            if('{{Auth::id()}}' == '{{$request->create_by}}'){
+                $('#buttonEditStatus').show();
+                if('{{$request->status}}' == 1){
+                    $('#status1').show();
+                    $('#status2').show();
+                }
+                if('{{$request->status}}' == 2){
+                    $('#status2').show();
+                    $('#status3').show();
+                }
+                if('{{$request->status}}' == 5){
+                    $('#status2').show();
+                    $('#status5').show();
+                }
+                if('{{$request->status}}' == 3){
+                    $('#buttonEditStatus').hide();
+                }
+            }
+            if('{{Auth::user()->level}}' == 2 ){
+                $('#buttonEditStatus').show();
+                if('{{$request->status}}' == 1){
+                    $('#status1').show();
+                    $('#status2').show();
+                }
+                if('{{$request->status}}' == 2){
+                    $('#status2').show();
+                    $('#status3').show();
+                }
+                if('{{$request->status}}' == 3){
+                    $('#status3').show();
+                    $('#status5').show();
+                }
+                if('{{$request->status}}' == 5){
+                    $('#status2').show();
+                    $('#status5').show();
+                }
+            }
+            if('{{Auth::user()->level}}' == 3 ){
+                $('#buttonEditStatus').show();
+                if('{{$request->status}}' == 1){
+                    $('#status1').show();
+                    $('#status2').show();
+                    $('#status6').show();
+                }
+                if('{{$request->status}}' == 2){
+                    $('#status2').show();
+                    $('#status3').show();
+                    $('#status6').show();
+                }
+                if('{{$request->status}}' == 3){
+                    $('#status3').show();
+                    $('#status4').show();
+                    $('#status5').show();
+                    $('#status6').show();
+                }
+                if('{{$request->status}}' == 5){
+                    $('#status2').show();
+                    $('#status4').show();
+                    $('#status5').show();
+                    $('#status6').show();
+                }
+            }
+            //hien thi comment
+            if('{{Auth::id()}}' == '{{$request->create_by}}' || '{{Auth::id()}}' == '{{$request->assigned_to}}' || '{{Auth::user()->level}}' == 2 || '{{Auth::user()->level}}' == 3){
+                $('#comment-form').show();
             }
         });
 
@@ -266,17 +386,15 @@
             $('#content').attr('placeholder',$('#content').val());
             $('#content').val('');
             $('#content').attr('required', true);
-
-
         }
 
 
         function edit(id){
-            $(id).prev().hide();
-            $(id).show();
+            var edit = document.getElementById(id);
+            $(edit).prev().hide();
+            $(edit).show();
             $('#save').show();
             $('#cancel').show();
-
         };
         function cancel(){
             // an phan chinh sua

@@ -15,7 +15,7 @@ class Thread extends Model
         return $this->belongsTo(Request::class,'request_id');
     }
     public function user_id(){
-        return $this->belongsTo(Request::class,'user_id');
+        return $this->belongsTo(User::class,'user_id');
     }
 
 }

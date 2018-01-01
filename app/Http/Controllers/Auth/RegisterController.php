@@ -47,23 +47,39 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        $error = Validator::make($data, [
+        $validate =  [
             'name' => 'required|string|max:255',
+            //them tuoi
+            'age' => 'required|Integer',
+            //
             'user_id' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'gender' => 'required',
             'level' => 'required',
             'password' => 'required|string|min:6|confirmed',
-        ]);
-//       dump($error);
-//        if($data['level'] != 0){
-//            $teamError = Validator::make($data,[
-//                'team'=> 'required',
-//            ]);
-//        //    $error = array_merge($error,$teamError);
-//        }
+        ];
+
+        if(isset($data['level']) && isset($data['level']) != 0) {
+            $validate['team_id']='required';
+        }
+//        $error = Validator::make($data, [
+//            'name' => 'required|string|max:255',
+//            'user_id' => 'required|string|max:255|unique:users',
+//            'email' => 'required|string|email|max:255|unique:users',
+//            'gender' => 'required',
+//            'level' => 'required',
+//            'password' => 'required|string|min:6|confirmed',
+//        ]);
+        $error = Validator::make($data,$validate);
+     //   dd($error);
         return $error;
     }
+//    protected function validateTeam( array $data){
+//        $error = Validation :: make($data,[
+//            'team_id' =>'required',
+//        ]);
+//        return $error;
+//    }
 
     /**
      * Create a new user instance after a valid registration.
@@ -73,7 +89,10 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        if(isset($data['level']) && $data['level'] == 0){
+            $data['team_id'] = null;
+        }
+        $user = [
             'name' => $data['name'],
             'user_id' => $data['user_id'],
             'age' => $data['age'],
@@ -81,8 +100,10 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'gender' => $data['gender'],
             'level' => $data['level'],
-            'team_id' => null,
+            'team_id' => $data['team_id'],
             'password' => bcrypt($data['password']),
-        ]);
+        ];
+
+        return User::create($user);
     }
 }

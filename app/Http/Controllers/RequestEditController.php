@@ -100,7 +100,8 @@ class RequestEditController extends RequestController
         $request->deadline = $data['deadline'];
         if (array_key_exists('assigned_to',$data)){
             $assignUser = $this->getUserIds($data['assigned_to']);
-            if ($request->assigned_to != $assignUser[0])
+         //   dd($assignUser);
+            if (count($assignUser) == 1 && $request->assigned_to != $assignUser[0])
                 $request->assigned_to = $assignUser[0];
         }
 
@@ -125,7 +126,7 @@ class RequestEditController extends RequestController
             Relater::where('user_id', $diffRelater)->delete();
         foreach ($diffNewRelaters as $diffNewRelater)
             RelaterController::create($id,$diffNewRelater);
-        ReadController::create($id);
+        ReadController::create($request);
         //send mail
         $this->sendMail($request, 2);
 

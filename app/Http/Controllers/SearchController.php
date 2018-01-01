@@ -77,16 +77,4 @@ class SearchController extends Controller
         }
         return $relaterIds;
     }
-
-    public function assignAutoComplete(Request $request, $id){
-        $rq = \App\Request::find($id);
-        $term = trim($request->term, " ");
-        $results = [];
-        $queries = User::where('name', 'LIKE', '%' . $term . '%');
-        $queries = $queries->where('team_id', $rq->team_id)->take(5)->get();
-        foreach ($queries as $query => $value){
-            $results[] = ['id' => $value->id, 'value' => $value->name . "[" . $value->user_id . "]"];
-        }
-        return $results;
-    }
 }
