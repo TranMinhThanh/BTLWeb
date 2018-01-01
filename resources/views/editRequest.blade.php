@@ -98,7 +98,6 @@
                                   {{$relatersLabel}}
                             </span>
                             <input id="relater" name="relater" class="form-control col-md-7" type="text">
-
                             {{--<input id="relater" class="form-control col-md-7" type="text" value = {{$request->relater}} placeholder={{$request->relater}}>--}}
 
                         </div>
@@ -218,8 +217,6 @@
             $('#status7').hide();
             $('#status5').hide();
             $('#status6').hide();
-
-
             if (('{{Auth::id()}}' == '{{$request->create_by}}') || ((('{{Auth::user()->level}}' ==3) || ('{{Auth::user()->level}}' ==2 ) ) && (('{{$request->status}}' == 1) || ('{{$request->status}}' == 2) )))
                 $("#buttonEditRelater").show();
             if((('{{Auth::user()->level}}' ==3) || ('{{Auth::user()->level}}' ==2 ) ) && (('{{$request->status}}' == 1) || ('{{$request->status}}' == 2) ))
@@ -443,7 +440,84 @@
         }
         function save(){
             if(confirm("Bạn có thực sự muốn lưu không?")){
+                var msg = "Ban da thay doi: \n";
+               // $(infoEdit).html("Ban da thay doi:");
+                if ($('#priority').is(":visible")){
+                    var newPri = "";
+                    switch ($('#priority').val()) {
+                        case '1': {
+                            newPri='{{env('priority.1')}}';
+                            break;
+                        }
+                        case '2': {
+                            newPri='{{env('priority.2')}}';
+                            break;
+                        }
+                        case '3': {
+                            newPri='{{env('priority.3')}}';
+                            break;
+                        }
+                        case '4': {
+                            newPri='{{env('priority.4')}}';
+                            break;
+                        }
+                        default:{}
+                    }
+                    msg+="Muc do uu tien: "+($('#priority').prev().text().replace(/\r?\n|\r/g,'')).trim()+"->"+newPri+"\n";
+                }
+                if ($('#deadline').is(":visible")){
+                    msg+="Deadline: "+($('#deadline').prev().text().replace(/\r?\n|\r/g,'')).trim()+"->"+$('#deadline').val()+"\n";
+                }
+                if ($('#team').is(":visible")){
+                    msg+="Team: "+($('#team').prev().text().replace(/\r?\n|\r/g,'')).trim()+"->"+$('#team').val()+"\n";
+                }
+                if ($('#assigned_to').is(":visible")){
+                    msg+="Assigned_to: "+($('#assigned_to').prev().text().replace(/\r?\n|\r/g,'')).trim()+"->"+$('#assigned_to').val()+"\n";
+                }
+                if ($('#relater').is(":visible")){
+                    msg+="Nguoi lien quan: "+($('#relater').prev().text().replace(/\r?\n|\r/g,'')).trim()+"->"+$('#relater').val()+"\n";
+                }
+                if ($('#status').is(":visible")){
+                    var newStatus = "";
+                    switch ($('#status').val()){
+                        case '1':{
+                            newStatus='{{env('status.1')}}';
+                            break;
+                        }
+                        case '2':{
+                            newStatus='{{env('status.2')}}';
+                            break;
+                        }
+                        case '3':{
+                            newStatus='{{env('status.3')}}';
+                            break;
+                        }
+                        case '4':{
+                            newStatus='{{env('status.4')}}';
+                            break;
+                        }
+                        case '5':{
+                            newStatus='{{env('status.5')}}';
+                            break;
+                        }
+                        case '6':{
+                            newStatus='{{env('status.6')}}';
+                            break;
+                        }
+                        case '7':{
+                            newStatus='{{env('status.7')}}';
+                            break;
+                        }
+                        default:{}
+                    }
+                    msg+="Trang thai: "+($('#status').prev().text().replace(/\r?\n|\r/g,'')).trim()+"->"+newStatus+"\n";
+                }
+                var t = prompt(msg+"Comment");
+                $('#requestComment').val(t);
+                alert($('#requestComment').val());
+                $('#comment').submit();
                 $('#editForm').submit();
+                // }
             }
         }
     </script>
