@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Read;
 use App\Relater;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -31,11 +32,23 @@ class RequestFilterController extends RequestController
                 $requests = $requests->where('team_id',Auth::user()['team_id']);
 //                $requests = \App\Request::where('team_id',Auth::user()['team_id']);
             if (env($status))
+                if (env($status) == 4) {
+                    $requests = $requests->where('status', '<>', 6)->where('status', '<>', 7);
+                    $requests = $requests->whereRaw('deadline < CURDATE()');
+                }
+                else
                 $requests = $requests->where('status',env($status));
             $requests->with('create_by');
             $requests->with('assign_to');
             $requests->with('team');
             $requests = $requests->paginate(20);
+
+            foreach ($requests->items() as $request){
+                if ($request->deadline < Carbon::now()) {
+                    $request->status = 4;
+                    $request->save();
+                }
+            }
             $data['requests'] = $requests;
             return view('filter', $data);
     }
