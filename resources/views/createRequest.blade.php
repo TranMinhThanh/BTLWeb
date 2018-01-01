@@ -61,13 +61,13 @@
                     </div>
                 </div>
 
-                <div class="row col-md-12">
+                <div >
                         <label class="control-label">Nội dung</label>
-                        <div class="'form-group col-md-12">
-                            <textarea type="text" class="form-control" name="content" row ='5' ></textarea>
-                        </div>
+                        {{--<div class="'form-group col-md-12">--}}
+                            <textarea type="text" row="10" class="form-control" name="content"  ></textarea>
+                        {{--</div>--}}
                 </div>
-                <div class="row">
+                <div class="row" style="padding-top:5px">
                     <div class="form-group col-md-12">
                     <label class="control-label">Chọn ảnh cho công việc</label>
                     <input type="file" name="file[]" multiple>

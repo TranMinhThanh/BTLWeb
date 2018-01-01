@@ -88,7 +88,7 @@
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label class="col-md-5">Người liên quan</label>
+                            <label class="col-md-5">Người liên quan:</label>
                             <?php
                                 $relatersLabel = '';
                             foreach ($relaters as $relater){
