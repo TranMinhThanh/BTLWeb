@@ -18,7 +18,7 @@
                 <div class="row">
                     <div class="form-group col-md-12">
                         <label for ='title' id="title" class="control-label">Tên công việc</label>
-                        <input type="text" name="title" id ="title" class="form-control" placeholder="Tên công việc">
+                        <input type="text" name="title" id ="title" class="form-control" placeholder="Tên công việc" required autofocus>
                     </div>
                 </div>
 
@@ -36,7 +36,7 @@
                     <div class="form-group col-md-6">
                         <label for ='deadline' id="deadline_label" class="control-label">Ngày hết hạn</label>
                         {{--<input type="text" name="name" id ="deadline" class="form-control">--}}
-                        <input id="deadline" type= 'date' name="deadline" class="form-control" />
+                        <input id="deadline" type= 'date' name="deadline" class="form-control" required />
 
                     </div>
                 </div>
@@ -57,14 +57,14 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label for ='relater' class="control-label">Người liên quan</label>
-                        <input type="text" name="relater" id ="relater" class="form-control" >
+                        <input type="text" name="relater" id ="relater" class="form-control" autofocus>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="form-group col-md-12">
                         <label class="control-label">Nội dung</label>
-                        <textarea id="content" name="content" font-family ='Time New Roman'></textarea>
+                        <textarea id="content" name="content" font-family ='Time New Roman' required></textarea>
                         <div class="btn-group">
                             <button type="button" class ="btn btn-default">Bold</button>
                             <button type="button" class ="btn btn-default" >Italic</button>
@@ -88,7 +88,7 @@
 
                 <div class="form-group">
                     <div class="col-md-6 col-md-offset-4">
-                        <button type="submit" class="btn btn-primary" onclick="submit()">
+                        <button type="submit" class="btn btn-primary">
                             Submit
                         </button>
                         <button type="button" class="btn btn-primary">
@@ -136,7 +136,7 @@
 @section('script')
     <script type="text/javascript">
         $(document).ready(function() {
-            //$("#deadline").datepicker();
+         //   event.preventDefault();
             function submit() {
                 $("#requestForm").submit();
             }

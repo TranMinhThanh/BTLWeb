@@ -4,13 +4,7 @@
 
     <script src= {{ asset('js/ajax/libs/jquery/jquery.min.js') }}></script>
     <script src= {{ asset('js/ajax/libs/jqueryui/jquery-ui.min.js') }}></script>
-    {{--<style>--}}
-        {{--.ui-autocomplete-loading {--}}
-            {{--background: white url("images/ui-anim_basic_16x16.gif") right center no-repeat;--}}
-        {{--}--}}
-        {{--</style>--}}
 @endsection
-
 @section('child_content')
     <div id ="editRequest" class="container-fluid">
         <div class=" panel panel-default" >
@@ -19,7 +13,7 @@
                 <div class="btn-toolbar">
                     <button type="button" class=" btn btn-default" title="Thay đổi bộ phận IT" onclick="edit('#team')" id="buttonEditTeam"><span class="glyphicon glyphicon glyphicon-cd small "></span></button>
                     <button type="button" class=" btn btn-default" title="Thay đổi mức độ ưu tiên" onclick="edit('#priority')" id="buttonEditPri"><span class="glyphicon glyphicon-retweet small"></span></button>
-                    <button type="button" class=" btn btn-default" title="Thay đổi deadline" onclick="edit('#deadline')" id="'buttonEditDeadline"><span class="glyphicon glyphicon-calendar small"></span></button>
+                    <button type="button" class=" btn btn-default" title="Thay đổi deadline" onclick="edit('#deadline')" id="buttonEditDeadline"><span class="glyphicon glyphicon-calendar small"></span></button>
                     <button type="button" class=" btn btn-default" title="Assign" onclick="edit('#assigned_to')" id="buttonEditAssigned"><span class="glyphicon glyphicon-hand-right small"></span></button>
                     <button type="button" class=" btn btn-default" title="Thay đổi người liên quan" onclick="edit('#relater')" id="buttonEditRelater"><span class="glyphicon glyphicon-user small"></span></button>
                     <button type="button" class=" btn btn-default" title="Thay đổi trạng thái" onclick="edit('#status')" id="buttonEditStatus"><span class="glyphicon glyphicon-transfer"></span></button>
@@ -133,25 +127,59 @@
             </div>
         </div>
         <div class="panel panel-default">
-            <div class="panel panel-body col-md-12">
-                <a href="#">Hiển thị thêm bình luận</a>
+            <div class="panel panel-body col-md-12" id="displayComment">
+
+               {{--<a href="#">Hiển thị thêm bình luận</a>--}}
+                 {{--khi bình luận xong thì bình luật sẽ đươc hiển thị nối vào đây--}}
+<!--                -->
+                   <h3 class="comment-title">
+                       <span class="glyphicon glyphicon-comment">Bình luận</span>
+                   </h3>
+
+                    @foreach($comments as $comment)
+                        <div class="comment">
+                            <div class="row">
+                                <div class="author-info">
+                                    <div class="col-md-1">
+                                        <img src="{{ "https://at-cdn-s01.audiotool.com/2013/05/11/users/guess_audiotool/avatar256x256-709d163bfa4a4ebdb25160d094551c33.jpg"}}" width="50" height="50" alt="">
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="author-name">
+                                            <h4>{{$comment['relations']['user_id']->user_id}}</h4>
+                                            <p class="author-time"> {{$comment->created_at}}</p>
+                                        </div>
+                                    </div>
+                               </div>
+                            </div>
+                            <div class="comment-content">
+                                {{$comment->content}}
+                            </div>
+                            <br>
+                            <br>
+                        </div>
+                   @endforeach
             </div>
             <div class=" panel panel-body">
-                <div ><label class="control-label h4"><span class="glyphicon glyphicon-edit"></span>Binh luan</label></div>
-                <div>
-                    <ul class="nav nav-pills">
-                        <li ><a>Bold</a></li>
-                        <li><a>Italic</a></li>
-                        <li><a>Messages</a></li>
-                    </ul>
-                </div>
-                <div >
-                    <form id="comment">
-                        <textarea type="text" class="form-control" id="requestComment" rows = '10' name="comment" ></textarea>
+
+                <div id="comment-form" style="margin-top:50px;" class="col-md-8 col-md-offset-2">
+                    <form id="comment" method="post" action="{{route("comment.store", $request->id)}}">
+                        {{csrf_field()}}
+                        <input id="request_id" name="request_id" value="{{$request->id}}" hidden>
+                        <input id="user_id" name="user_id" value="{{\Illuminate\Support\Facades\Auth::id()}}" hidden>
+                        <textarea type="text" class="form-control" id="requestComment" name="content" ></textarea>
+                        <div class="btn-toolbar col-md-3 pull-right">
+                            <button class="btn btn-primary" style="margin: 5px" onclick="submit()">Bình luận</button>
+                        </div>
+                    </form>
+
+                    {{--form id="comment">
                         {{ csrf_field() }}
+                        <textarea type="text" class="form-control" id="requestComment" name="comment" ></textarea>
                     </form>
                 </div>
-                <button class="btn btn-primary">Bình luận</button>
+                <div class="btn-toolbar col-md-3 pull-right">
+                    <button class="btn btn-primary" style="margin: 5px" onclick="comment()">Bình luận</button>--}}
+                </div>
             </div>
         </div>
     </div>
@@ -167,8 +195,6 @@
             $('#save').click(save);
             $('#cancel').hide();
             $('#cancel').click(cancel);
-          //  $('#content').attr('disabled',true);
-
             $('#content').attr('readonly',true);
 
             if('{{Auth::user()->level}}' !=3 && '{{Auth::user()->level}}' !=2 ){
@@ -194,15 +220,6 @@
                     return false;
                 },
                 select: function( event, ui ) {
-                    // var terms = this.value.split();
-                    // // remove the current input
-                    // terms.pop();
-                    // // add the selected item
-                    // terms.push( ui.item.value );
-                    // // add placeholder to get the comma-and-space at the end
-                    // terms.push( "" );
-                    // this.value = terms.join( ", " );
-                    // return false;
                     return true;
                 }
             });
@@ -248,6 +265,9 @@
             $('#content').attr('readonly',false);
             $('#content').attr('placeholder',$('#content').val());
             $('#content').val('');
+            $('#content').attr('required', true);
+
+
         }
 
 
@@ -300,7 +320,6 @@
              //   $('#status').disabled;
                 $('#content').attr('readonly',true);
             }
-
             $('#save').hide();
             $('#cancel').hide();
         }
@@ -308,9 +327,6 @@
             if(confirm("Bạn có thực sự muốn lưu không?")){
                 $('#editForm').submit();
             }
-        }
-        function comment(){
-            $('#comment').submit();
         }
     </script>
 @endsection
