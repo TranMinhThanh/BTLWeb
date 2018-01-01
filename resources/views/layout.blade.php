@@ -113,7 +113,7 @@
                         @endif
                     </div>
 
-                    <?php if (($i == 4) || ($i == 5)){ ?>
+                    <?php if (($i == 2) || ($i == 3) || ($i == 4)){ ?>
                     <div class="panel-body" id="ClosedRequire">
                         <span class=" glyphicon glyphicon-reply"></span>
                         <a href="{{ url('filter/'.env('request.'.$i).'/feedback') }}">{{ env('status.7') }}</a>
