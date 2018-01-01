@@ -17,7 +17,6 @@
                     <button type="button" class=" btn btn-default" title="Assign" onclick="edit('assigned_to')" id="buttonEditAssigned"><span class="glyphicon glyphicon-hand-right small"></span></button>
                     <button type="button" class=" btn btn-default" title="Thay đổi người liên quan" onclick="edit('relater')" id="buttonEditRelater"><span class="glyphicon glyphicon-user small"></span></button>
                     <button type="button" class=" btn btn-default" title="Thay đổi trạng thái" onclick="edit('status')" id="buttonEditStatus"><span class="glyphicon glyphicon-transfer"></span></button>
-                    {{--<button type="button" class=" btn btn-default" title="Thay đổi tất cả" onclick="editAll()"><span class="glyphicon glyphicon-edit"></span></button>--}}
                 </div>
             </div>
             <div class="panel-body">
@@ -136,10 +135,6 @@
             </div>
             <div class="panel panel-body col-md-12" id="displayComment">
 
-               {{--<a href="#">Hiển thị thêm bình luận</a>--}}
-                 {{--khi bình luận xong thì bình luật sẽ đươc hiển thị nối vào đây--}}
-<!--                -->
-
                     @foreach($comments as $comment)
                         <div class="comment col-md-12">
                             <div class="row">
@@ -172,17 +167,10 @@
                         <input id="user_id" name="user_id" value="{{\Illuminate\Support\Facades\Auth::id()}}" hidden>
                         <textarea type="text" class="form-control" id="requestComment" name="content" ></textarea>
                         <div class="btn-toolbar col-md-3 pull-right">
-                            <button class="btn btn-primary" style="margin: 5px" onclick="submit()">Bình luận</button>
+                            <button class="btn btn-primary" style="margin: 5px" onclick="submit()" id="commentButton">Bình luận</button>
                         </div>
                     </form>
 
-                    {{--form id="comment">
-                        {{ csrf_field() }}
-                        <textarea type="text" class="form-control" id="requestComment" name="comment" ></textarea>
-                    </form>
-                </div>
-                <div class="btn-toolbar col-md-3 pull-right">
-                    <button class="btn btn-primary" style="margin: 5px" onclick="comment()">Bình luận</button>--}}
                 </div>
             </div>
         </div>
@@ -514,7 +502,7 @@
                 var t = prompt(msg+"Comment");
                 $('#requestComment').val(t);
                 alert($('#requestComment').val());
-                $('#comment').submit();
+                $('#commentButton').click();
                 $('#editForm').submit();
                 // }
         }
