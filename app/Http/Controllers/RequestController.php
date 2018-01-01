@@ -98,6 +98,14 @@ class RequestController extends Controller
             'team_id' => $data['team'],
         ]);
 
+        //tìm sub-leader của team để assign
+        $users = User::all()->where('team_id',$data['team'])->where('level',2);
+        foreach ($users as $user)
+            if ($newRequest['assigned_to'] == null) {
+                $newRequest['assigned_to'] = $user->id;
+                $newRequest->save();
+            }
+
         foreach ($relaterIds as $relaterId){
             RelaterController::create($newRequest['id'],$relaterId);
         }

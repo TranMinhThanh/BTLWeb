@@ -49,6 +49,8 @@
             <?php
                 $i = 0;
                 for ($i; $i <= 4; $i++){
+                    if ((Auth::user()->level == 0) && (($i == 2) || ($i == 3) || ($i == 4)))
+                        break;
                     if ((Auth::user()->level == 1) && (($i == 3) || ($i == 4)))
                         break;
                     if ((Auth::user()->level == 2) && ($i == 4))
@@ -94,6 +96,15 @@
                             <span class="pull-right badge" style="background-color:#8eb4cb " id="unread">{{ \App\Http\Controllers\RequestFilterController::myUnreadRequest(env(env('request.'.$i)),'resolved') }}</span>
                         @endif
                     </div>
+
+                    <?php if ($i != 0 && $i != 1){ ?>
+                        <div class="panel-body" id="FeedbackRequire">
+                            <span class=" glyphicon glyphicon-reply"></span>
+                            <a href="{{ url('filter/'.env('request.'.$i).'/feedback') }}">{{ env('status.5') }}</a>
+                            <span class="pull-right" id="unread">{{ \App\Http\Controllers\RequestFilterController::myUnreadRequest(env(env('request.'.$i)),'feedback') }}</span>
+                        </div>
+                    <?php } ?>
+
                     <div class="panel-body" id="OutOfDateRequire">
                         <span class=" glyphicon glyphicon-calendar"></span>
                         <a href="{{ url('filter/'.env('request.'.$i).'/outOfDate') }}">{{ env('status.4') }}</a>
@@ -101,6 +112,15 @@
                             <span class="pull-right badge" style="background-color: #c9302c" id="unread">{{ \App\Http\Controllers\RequestFilterController::myUnreadRequest(env(env('request.'.$i)),'outOfDate') }}</span>
                         @endif
                     </div>
+
+                    <?php if (($i == 4) || ($i == 5)){ ?>
+                    <div class="panel-body" id="ClosedRequire">
+                        <span class=" glyphicon glyphicon-reply"></span>
+                        <a href="{{ url('filter/'.env('request.'.$i).'/feedback') }}">{{ env('status.7') }}</a>
+                        <span class="pull-right" id="unread">{{ \App\Http\Controllers\RequestFilterController::myUnreadRequest(env(env('request.'.$i)),'closed') }}</span>
+                    </div>
+                    <?php } ?>
+
                 </div>
 
             </div>
