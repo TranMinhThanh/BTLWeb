@@ -439,7 +439,6 @@
             $('#cancel').hide();
         }
         function save(){
-            if(confirm("Bạn có thực sự muốn lưu không?")){
                 var msg = "Ban da thay doi: \n";
                // $(infoEdit).html("Ban da thay doi:");
                 if ($('#priority').is(":visible")){
@@ -518,7 +517,6 @@
                 $('#comment').submit();
                 $('#editForm').submit();
                 // }
-            }
         }
     </script>
 @endsection
