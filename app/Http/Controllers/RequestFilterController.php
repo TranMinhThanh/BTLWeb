@@ -38,6 +38,7 @@ class RequestFilterController extends RequestController
                 }
                 else
                 $requests = $requests->where('status',env($status));
+
             $requests->with('create_by');
             $requests->with('assign_to');
             $requests->with('team');

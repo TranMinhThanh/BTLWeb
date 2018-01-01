@@ -66,7 +66,7 @@
                                 <option id='status1' value="1">{{env('status.1')}}</option>
                                 <option id='status2' value="2">{{env('status.2')}}</option>
                                 <option id='status3' value="3">{{env('status.3')}}</option>
-                                <option id='status4' value="4">{{env('status.4')}}</option>
+                                <option id='status7' value="7">{{env('status.7')}}</option>
                                 <option id='status5' value="5">{{env('status.5')}}</option>
                                 <option id='status6' value="6">{{env('status.6')}}</option>
                             </select>
@@ -215,7 +215,7 @@
             $('#status1').hide();
             $('#status2').hide();
             $('#status3').hide();
-            $('#status4').hide();
+            $('#status7').hide();
             $('#status5').hide();
             $('#status6').hide();
 
@@ -244,14 +244,14 @@
                 }
                 if('{{$request->status}}' == 3){
                     $('#status3').show();
-                    $('#status4').show();
                     $('#status5').show();
                     $('#status6').show();
+                    $('#status7').show();
                 }
                 if('{{$request->status}}' == 5){
-                    $('#status4').show();
                     $('#status5').show();
                     $('#status6').show();
+                    $('#status7').show();
                 }
             }
             if('{{Auth::id()}}' == '{{$request->create_by}}'){
@@ -305,15 +305,15 @@
                 }
                 if('{{$request->status}}' == 3){
                     $('#status3').show();
-                    $('#status4').show();
                     $('#status5').show();
                     $('#status6').show();
+                    $('#status7').show();
                 }
                 if('{{$request->status}}' == 5){
                     $('#status2').show();
-                    $('#status4').show();
                     $('#status5').show();
                     $('#status6').show();
+                    $('#status7').show();
                 }
             }
             //hien thi comment
