@@ -39,7 +39,7 @@
 
 @section('content')
 <div class ="container-fluid" style="background-color:#98cbe8 ">
-        <div class ='col-sm-2' id= 'menu' style="background-color:#98cbe8 ">
+        <div class ='col-md-2' id= 'menu' style="background-color:#98cbe8 ">
            <!-- <div class="panel-title">Request IT</div>-->
             <div class="row">
                 <a class="btn-print-this btn btn-primary" id="createRequest" href=" {{ url('/createRequest') }}">+ THÊM YÊU CẦU
@@ -58,36 +58,48 @@
                 ?>
 
             <div class="panel panel-default">
-                <div id ="{{ 'menuHeading'.$i }}" class="panel-heading" data-toggle="collapse" data-target ="{{ '#menu'.$i }}" onclick="open_close('{{'#menuHeading'.$i}}')">
+                <div id ="{{ 'menuHeading'.$i }}" class="panel-heading " data-toggle="collapse" data-target ="{{ '#menu'.$i }}" onclick="open_close('{{'#menuHeading'.$i}}')">
+                   {{--<div class="col-sm-12">--}}
                     <label>{{ env(env('request.'.$i).'.label') }}</label>
                     <span  class ="pull-right glyphicon glyphicon-minus"></span>
+                   {{--</div>--}}
                 </div>
 
                 <div class="panel-collapse collapse in" id = "{{ 'menu'.$i }}">
                     <div class="panel-body " id ="allRequire" onclick = "display()">
                         <span class="glyphicon glyphicon-list-alt"></span>
                         <a href="{{ url('filter/'.env('request.'.$i).'/all') }}">{{ env('status.0') }}</a>
-                        <span class="pull-right" id="unread">{{ \App\Http\Controllers\RequestFilterController::myUnreadRequest(env(env('request.'.$i)),'all') }}</span>
+                        @if(\App\Http\Controllers\RequestFilterController::myUnreadRequest(env(env('request.'.$i)),'all') !=0)
+                            <span class="pull-right badge" style="background-color: #2ab27b" id="unread">{{ \App\Http\Controllers\RequestFilterController::myUnreadRequest(env(env('request.'.$i)),'all') }}</span>
+                        @endif
                     </div>
                     <div class="panel-body" id ="newRequire" onclick="">
                         <span class = "glyphicon glyphicon-envelope"></span>
                         <a href="{{ url('filter/'.env('request.'.$i).'/new') }}">{{ env('status.1') }}</a>
-                        <span class="pull-right" id="unread">{{ \App\Http\Controllers\RequestFilterController::myUnreadRequest(env(env('request.'.$i)),'new') }}</span>
+                        @if(\App\Http\Controllers\RequestFilterController::myUnreadRequest(env(env('request.'.$i)),'new') !=0)
+                            <span class="pull-right badge"style="background-color: #269abc" id="unread">{{ \App\Http\Controllers\RequestFilterController::myUnreadRequest(env(env('request.'.$i)),'new') }}</span>
+                        @endif
                     </div>
                     <div class="panel-body" id="inprogressRequest">
                         <span class=" glyphicon glyphicon-import"></span>
                         <a href="{{ url('filter/'.env('request.'.$i).'/inprogress') }}">{{ env('status.2') }}</a>
-                        <span class="pull-right" id="unread">{{ \App\Http\Controllers\RequestFilterController::myUnreadRequest(env(env('request.'.$i)),'inprogress') }}</span>
+                        @if(\App\Http\Controllers\RequestFilterController::myUnreadRequest(env(env('request.'.$i)),'inprogress') !=0)
+                            <span class="pull-right badge" style="background-color: #99cb84" id="unread">{{ \App\Http\Controllers\RequestFilterController::myUnreadRequest(env(env('request.'.$i)),'inprogress') }}</span>
+                        @endif
                     </div>
                     <div class="panel-body" id ="resolvedRequire">
                         <span class=" glyphicon glyphicon-registration-mark"></span>
                         <a href="{{ url('filter/'.env('request.'.$i).'/resolved') }}">{{ env('status.3') }}</a>
-                        <span class="pull-right" id="unread">{{ \App\Http\Controllers\RequestFilterController::myUnreadRequest(env(env('request.'.$i)),'resolved') }}</span>
+                        @if(\App\Http\Controllers\RequestFilterController::myUnreadRequest(env(env('request.'.$i)),'resolved') !=0)
+                            <span class="pull-right badge" style="background-color:#8eb4cb " id="unread">{{ \App\Http\Controllers\RequestFilterController::myUnreadRequest(env(env('request.'.$i)),'resolved') }}</span>
+                        @endif
                     </div>
                     <div class="panel-body" id="OutOfDateRequire">
                         <span class=" glyphicon glyphicon-calendar"></span>
                         <a href="{{ url('filter/'.env('request.'.$i).'/outOfDate') }}">{{ env('status.4') }}</a>
-                        <span class="pull-right" id="unread">{{ \App\Http\Controllers\RequestFilterController::myUnreadRequest(env(env('request.'.$i)),'outOfDate') }}</span>
+                        @if(\App\Http\Controllers\RequestFilterController::myUnreadRequest(env(env('request.'.$i)),'outOfDate') !=0)
+                            <span class="pull-right badge" style="background-color: #c9302c" id="unread">{{ \App\Http\Controllers\RequestFilterController::myUnreadRequest(env(env('request.'.$i)),'outOfDate') }}</span>
+                        @endif
                     </div>
                 </div>
 
