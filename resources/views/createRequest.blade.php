@@ -61,24 +61,12 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="form-group col-md-12">
+                <div class="row col-md-12">
                         <label class="control-label">Nội dung</label>
-                        <textarea id="content" name="content" font-family ='Time New Roman' required></textarea>
-                        <div class="btn-group">
-                            <button type="button" class ="btn btn-default">Bold</button>
-                            <button type="button" class ="btn btn-default" >Italic</button>
-                            <button type="button" class ="btn btn-default">Bold</button>
+                        <div class="'form-group col-md-12">
+                            <textarea type="text" class="form-control" name="content" row ='5' ></textarea>
                         </div>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default "><span class="glyphicon glyphicon-bold"></span> </button>
-                        </div>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default "><span class="glyphicon glyphicon-italic"></span> </button>
-                        </div>
-                    </div>
                 </div>
-
                 <div class="row">
                     <div class="form-group col-md-12">
                     <label class="control-label">Chọn ảnh cho công việc</label>

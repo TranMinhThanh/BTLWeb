@@ -32,6 +32,7 @@ class RequestFilterController extends RequestController
 //                $requests = \App\Request::where('team_id',Auth::user()['team_id']);
             if (env($status))
                 $requests = $requests->where('status',env($status));
+
             $requests->with('create_by');
             $requests->with('assign_to');
             $requests->with('team');
