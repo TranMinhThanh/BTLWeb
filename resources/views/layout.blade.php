@@ -49,11 +49,11 @@
             <?php
                 $i = 0;
                 for ($i; $i <= 4; $i++){
-                    if ((Auth::user()->level == 0) && (($i == 3) || ($i == 4)))
+                    if ((Auth::user()->level == 1) && (($i == 3) || ($i == 4)))
                         break;
-                    if ((Auth::user()->level == 1) && ($i == 4))
+                    if ((Auth::user()->level == 2) && ($i == 4))
                         break;
-                    if ((Auth::user()->level == 2) && ($i == 3))
+                    if ((Auth::user()->level == 3) && ($i == 3))
                         $i++;
                 ?>
 
