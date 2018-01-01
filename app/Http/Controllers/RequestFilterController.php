@@ -53,7 +53,7 @@ class RequestFilterController extends RequestController
             $requests = $requests->whereIn('id',$requestList);
         }
         else if (env($kindOfRequests) == 2)
-            $requests = $requests->where('assign_to',Auth::id());
+            $requests = $requests->where('assigned_to',Auth::id());
         else if (env($kindOfRequests) == 3)
             $requests = $requests->where('team_id',Auth::user()['team_id']);
 
@@ -64,7 +64,7 @@ class RequestFilterController extends RequestController
             $requestIds []= $request['id'];
 
         // tìm toàn bộ request chưa đc đọc
-        $unreadRequests = Read::all()->where('status',0);
+        $unreadRequests = Read::all()->where('status',0)->where('user_id',Auth::id());
         $unreadIds = [];
         foreach ($unreadRequests as $unreadRequest)
             $unreadIds []= $unreadRequest['request_id'];
