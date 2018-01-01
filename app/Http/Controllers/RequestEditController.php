@@ -90,8 +90,6 @@ class RequestEditController extends RequestController
         $data =$request->all();
         $this ->editValidator($data)->validate();
         $this->edit($data,$data['id']);
-        return redirect($this->redirectTo.$data['id']);
-
     }
 
     protected function edit(array $data,$id){

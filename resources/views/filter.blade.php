@@ -45,7 +45,7 @@
                             </th>
 
                             <th>
-                                <a> {{$request['relations']['assign_to'] == null ? '' : $request['relations']['assign_to']->user_id}} </a>
+                                <a> {{$request['relations']['assign_to'] == null ? '' : $request['relations']['assign_to']->name}} </a>
                             </th>
 
                             <th>

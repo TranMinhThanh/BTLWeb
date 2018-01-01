@@ -99,9 +99,11 @@
 
                     <?php if ($i != 0 && $i != 1){ ?>
                         <div class="panel-body" id="FeedbackRequire">
-                            <span class=" glyphicon glyphicon-reply"></span>
+                            <span class="glyphicon glyphicon-log-in"></span>
                             <a href="{{ url('filter/'.env('request.'.$i).'/feedback') }}">{{ env('status.5') }}</a>
-                            <span class="pull-right" id="unread">{{ \App\Http\Controllers\RequestFilterController::myUnreadRequest(env(env('request.'.$i)),'feedback') }}</span>
+                            @if(\App\Http\Controllers\RequestFilterController::myUnreadRequest(env(env('request.'.$i)),'feedback') !=0)
+                                <span class="pull-right" id="unread">{{ \App\Http\Controllers\RequestFilterController::myUnreadRequest(env(env('request.'.$i)),'feedback') }}</span>
+                            @endif
                         </div>
                     <?php } ?>
 
@@ -115,9 +117,11 @@
 
                     <?php if (($i == 3) || ($i == 4)){ ?>
                     <div class="panel-body" id="ClosedRequire">
-                        <span class=" glyphicon glyphicon-reply"></span>
-                        <a href="{{ url('filter/'.env('request.'.$i).'/feedback') }}">{{ env('status.7') }}</a>
-                        <span class="pull-right" id="unread">{{ \App\Http\Controllers\RequestFilterController::myUnreadRequest(env(env('request.'.$i)),'closed') }}</span>
+                        <span class="glyphicon glyphicon-folder-close"></span>
+                        <a href="{{ url('filter/'.env('request.'.$i).'/close') }}">{{ env('status.7') }}</a>
+                        @if(\App\Http\Controllers\RequestFilterController::myUnreadRequest(env(env('request.'.$i)),'close') !=0)
+                            <span class="pull-right" id="unread">{{ \App\Http\Controllers\RequestFilterController::myUnreadRequest(env(env('request.'.$i)),'close') }}</span>
+                        @endif
                     </div>
                     <?php } ?>
 

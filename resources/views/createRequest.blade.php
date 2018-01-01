@@ -36,7 +36,7 @@
                     <div class="form-group col-md-6">
                         <label for ='deadline' id="deadline_label" class="control-label">Ngày hết hạn</label>
                         {{--<input type="text" name="name" id ="deadline" class="form-control">--}}
-                        <input id="deadline" type= 'date' name="deadline" class="form-control" required />
+                        <input id="deadline" type= 'date' name="deadline" class="form-control" required autofocus />
 
                     </div>
                 </div>
@@ -64,7 +64,7 @@
                 <div >
                         <label class="control-label">Nội dung</label>
                         {{--<div class="'form-group col-md-12">--}}
-                            <textarea type="text" row="10" class="form-control" name="content"  ></textarea>
+                            <textarea type="text" row="10" class="form-control" name="content" required  ></textarea>
                         {{--</div>--}}
                 </div>
                 <div class="row" style="padding-top:5px">

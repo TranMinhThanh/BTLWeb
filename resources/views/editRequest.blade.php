@@ -500,11 +500,10 @@
                     msg+="Trang thai: "+($('#status').prev().text().replace(/\r?\n|\r/g,'')).trim()+"->"+newStatus+"\n";
                 }
                 var t = prompt(msg+"Comment");
-                $('#requestComment').val(t);
-                alert($('#requestComment').val());
-                $('#commentButton').click();
+                $('#requestComment').val(msg+"\nLý do:"+t);
                 $('#editForm').submit();
-                // }
+                $('#commentButton').click();
+
         }
     </script>
 @endsection
