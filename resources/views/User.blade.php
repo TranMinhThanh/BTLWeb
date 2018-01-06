@@ -10,11 +10,16 @@
     </style>
 @endsection
 @section('content')
-    <div id="container" class="col-sm-offset-2 col-md-8 " style="background-color: #98cbe8">
+    <div id="container" class="col-sm-offset-2 col-md-8 ">
             <?php
                 $user = Auth::user();
                 ?>
-            <div class="row" id="name">
+        <div class="panel panel-default" style="background-color: #98cbe8; padding : 0px ">
+            <div class = 'panel panel-headding' style=" padding : 0px ">
+                <label class="control-lable h3">Profile</label>
+            </div>
+            <div class="panel panel-body" style="background-color: #98cbe8; padding : 0px ">
+                <div class="row" id="name">
                 <label class="col-md-3">{{env('uName')}}:</label>
                 <span class="col-md-6">{{$user->name}}</span>
                 <button class ='btn glyphicon glyphicon-pencil' onclick="editUserInfo('name')"></button>
@@ -36,14 +41,29 @@
             </div>
             <div class="row"id="gender">
                 <label class="col-md-3">{{env('uGender')}}:</label>
-                <span class="col-md-6">{{$user->gender}}</span>
+                @if($user->gender == 1)
+                    <span class="col-md-6">Nam</span>
+                @else
+                    <span class="col-md-6">Nam</span>
+                @endif
                 <button class ='btn glyphicon glyphicon-pencil' onclick="editUserInfo('gender')"></button>
             </div>
             <div class="row" id="level">
                 <label  class="col-md-3">{{env('uLevel')}}:</label>
-                <span class="col-md-6">{{$user->level}}</span>
+                <span class="col-md-6">{{env('level.'.$user->level)}}</span>
                 <button class ='btn glyphicon glyphicon-pencil' onclick="editUserInfo('level')"></button>
             </div>
+                @if($user->level !=0 && $user->level !=3)
+                    <div class="row" id="team_id">
+                        <label  class="col-md-3">Team:</label>
+                        @if($user->team ==1)
+                            <span class="col-md-6">IT-HaNoi</span>
+                        @else
+                            <span class="col-md-6">IT-DaNang</span>
+                        @endif
+                        <button class ='btn glyphicon glyphicon-pencil' onclick="editUserInfo('level')"></button>
+                    </div>
+                @endif
             <div class="row" id="email">
                 <label  class="col-md-3">{{env('uEmail')}}:</label>
                 <span class="col-md-6">{{$user->email}}</span>
@@ -53,6 +73,8 @@
                 <button class="btn btn-primary" id="save" style="display: none" onclick="store()">save</button>
                 <button class="btn btn-primary" id="cancel" style="display: none" onclick="cancel()">cancal</button>
             </div>
+            </div>
+    </div>
     </div>
     <script type="text/javascript">
         function store(){

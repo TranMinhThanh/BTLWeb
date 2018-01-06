@@ -88,7 +88,7 @@
                                     <input name="level" type="radio" value="0" onclick ="disableTeam()">Normal-Member
                                     <input name="level" type="radio" value="1" onclick="enableTeam()">Member
                                     <input name="level" type="radio" value="2" onclick="enableTeam()">Sub-leader
-                                    <input name="level" type="radio" value="3" onclick="enableTeam()">Leader
+                                    <input name="level" type="radio" value="3" onclick="disableTeam()">Leader
                                     @if ($errors->has('level'))
                                         <span class="help-block">
                                         <strong>Please choose this field!</strong>

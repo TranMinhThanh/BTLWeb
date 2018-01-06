@@ -42,17 +42,27 @@ class RequestFilterController extends RequestController
             $requests->with('create_by');
             $requests->with('assign_to');
             $requests->with('team');
+            $reads = [];
+
             $requests = $requests->paginate(20);
 
+            foreach ($requests->items() as $request){
+                if (ReadController::check($request->id,Auth::id()))
+                    $reads[] = '';
+                else $reads[] = '*';
+            }
+
             $data['requests'] = $requests;
+            $data['reads'] = $reads;
             return view('filter', $data);
     }
 
     public static function myUnreadRequest($kindOfRequests, $status){
-        $requests = \App\Request::all();
-        if (env($kindOfRequests) == 0)
+//        $requests = \App\Request::all();
+        $requests = \App\Request::where('id','<>',-1);
+        if ($kindOfRequests == 0)
             $requests = $requests->where('create_by',Auth::id());
-        else if (env($kindOfRequests) == 1){
+        else if ($kindOfRequests == 1){
             $requestList = [];
             $relatersList = Relater::all()->where('user_id',Auth::id());
             foreach ($relatersList as $relater){
@@ -60,13 +70,21 @@ class RequestFilterController extends RequestController
             }
             $requests = $requests->whereIn('id',$requestList);
         }
-        else if (env($kindOfRequests) == 2)
+        else if ($kindOfRequests == 2)
             $requests = $requests->where('assigned_to',Auth::id());
-        else if (env($kindOfRequests) == 3)
+        else if ($kindOfRequests == 3)
             $requests = $requests->where('team_id',Auth::user()['team_id']);
 
         if (env($status))
-            $requests = $requests->where('status',env($status));
+            if (env($status) == 4) {
+                $requests = $requests->where('status', '<>', 6)->where('status', '<>', 7);
+                $requests = $requests->whereRaw('deadline < CURDATE()');
+            }
+            else
+                $requests = $requests->where('status',env($status));
+
+        $requests = $requests->paginate(20);
+
         $requestIds = [];
         foreach ($requests as $request)
             $requestIds []= $request['id'];
@@ -79,6 +97,11 @@ class RequestFilterController extends RequestController
 
         //check số phần tử giống nhau trong $requestIds và $unreadIds
         $diffUnreads = array_diff($unreadIds, $requestIds);
+
         return count($unreadIds) - count($diffUnreads);
+    }
+
+    public function reload(){
+        return redirect()->back();
     }
 }

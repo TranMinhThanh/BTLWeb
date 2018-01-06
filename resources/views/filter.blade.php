@@ -4,8 +4,12 @@
         <div class="panel panel-heading">
             <label class="h4 col-md-10">Danh sách công việc</label>
             <div class="btn-toolbar ">
-            <button type="button" class="btn btn-primary  " title="Reset bộ lọc"><span class="glyphicon glyphicon-refresh"></span></button>
-            <button type="button" class="btn btn-primary " title="Tìm kiếm"><span class="glyphicon glyphicon-search"></span></button>
+            <a href="{{url("reload")}}">
+            <button type="button" class="btn btn-primary  " title="Reset bộ lọc">
+                <span class="glyphicon glyphicon-refresh">
+                </span></button>
+            </a>
+            {{--<button type="button" class="btn btn-primary " title="Tìm kiếm"><span class="glyphicon glyphicon-search"></span></button>--}}
             </div>
             </div>
         <div class="panel panel-body">
@@ -29,7 +33,10 @@
                     ?>
                         <tr>
                             <th>
-                                <label> <?php echo($stt++); ?></label>
+                                {{--// tao them neu chua doc thi danh dau--}}
+                                {{--@if()--}}
+                                <span style="color: #c9302c ; font-weight: bold">{{$reads[$stt - 1]}}</span>
+                                <span> <?php echo($stt++); ?></span>
                             </th>
 
                             <th>

@@ -42,3 +42,5 @@ Route::get('search/autocomplete/{type}/{id?}', 'SearchController@autocomplete');
 Route::get('image/{filename?}','RequestEditController@getImage');
 
 Route::post('comment/store','CommentController@store')->name('comment.store');
+
+Route::get('/reload', 'RequestFilterController@reload');

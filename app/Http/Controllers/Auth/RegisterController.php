@@ -59,7 +59,7 @@ class RegisterController extends Controller
             'password' => 'required|string|min:6|confirmed',
         ];
 
-        if(isset($data['level']) && isset($data['level']) != 0) {
+        if(isset($data['level']) && ($data['level'] != 0 && $data['level'] != 3)) {
             $validate['team_id']='required';
         }
 //        $error = Validator::make($data, [
@@ -89,7 +89,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        if(isset($data['level']) && $data['level'] == 0){
+        if(isset($data['level']) && ($data['level'] == 0 || $data['level'] ==3)){
             $data['team_id'] = null;
         }
         $user = [

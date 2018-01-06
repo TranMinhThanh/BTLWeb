@@ -71,6 +71,14 @@
                                             {{--{{ csrf_field() }}--}}
                                         {{--</form>--}}
                                     </li>
+                                    <li>
+                                        <a href="{{url('/home')}}">
+                                            Home
+                                        </a>
+                                        {{--<form id="userInfo-form" action="{{route('userInfo')}}" method="POST" style="display: none;">--}}
+                                        {{--{{ csrf_field() }}--}}
+                                        {{--</form>--}}
+                                    </li>
                                 </ul>
                             </li>
 

@@ -36,4 +36,14 @@ class ReadController extends Controller
         }
 
     }
+
+    public static function check($requestId,$userId){
+        $read = Read::all()->where('request_id',$requestId)->where('user_id',$userId);
+        if (count($read) == 1)
+            foreach ($read as $r) {
+                if ($r->status == 0)
+                    return false;
+            }
+        return true;
+    }
 }

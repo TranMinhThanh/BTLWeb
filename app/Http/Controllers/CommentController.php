@@ -29,4 +29,14 @@ class CommentController extends Controller
         RequestController::sendMail($rq, 2);
         return redirect()->back();
     }
+
+    public static function storeComment($requestId, $userId, $content){
+        $rq = \App\Request::find($requestId);
+        $comment = Thread::create([
+            'request_id' => $requestId,
+            'user_id'  => $userId,
+            'content' => $content
+        ]);
+        RequestController::sendMail($rq, 2);
+    }
 }

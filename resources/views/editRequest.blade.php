@@ -115,6 +115,8 @@
                     <button type="button" class="btn btn-primary " style="margin-top: 5px" id="cancel" >cancel</button>
                     </div>
 
+                    <input id="commentEditForm" name="comment" hidden>
+
                     <div class = "col-md-12">
                         <?php
                         //hien thi anh
@@ -464,6 +466,8 @@
                 if ($('#relater').is(":visible")){
                     msg+="Nguoi lien quan: "+($('#relater').prev().text().replace(/\r?\n|\r/g,'')).trim()+"->"+$('#relater').val()+"\n";
                 }
+                var i = false;
+
                 if ($('#status').is(":visible")){
                     var newStatus = "";
                     switch ($('#status').val()){
@@ -493,17 +497,28 @@
                         }
                         case '7':{
                             newStatus='{{env('status.7')}}';
+                            // if (confirm("Bạn có hài lòng không?")){
+                            //     newStatus = newStatus + "\n Hài lòng";
+                            // }
+                            // else
+                            //     newStatus = newStatus + "\n Không hài lòng";
+                            i = confirm("Bạn có hài lòng không?");
+                            if (i == false)
+                                newStatus = newStatus + "\n Không hài lòng";
                             break;
                         }
                         default:{}
                     }
-                    msg+="Trang thai: "+($('#status').prev().text().replace(/\r?\n|\r/g,'')).trim()+"->"+newStatus+"\n";
+                    msg+="Trạng thái: "+($('#status').prev().text().replace(/\r?\n|\r/g,'')).trim()+"->"+newStatus+"\n";
                 }
-                var t = prompt(msg+"Comment");
-                $('#requestComment').val(msg+"\nLý do:"+t);
+                if (i == false) {
+                    do{
+                        var t = prompt(msg + "Comment");
+                    }
+                    while (t.trim() == '')
+                }
+                $('#commentEditForm').val(msg+"\nLý do:"+t);
                 $('#editForm').submit();
-                $('#commentButton').click();
-
         }
     </script>
 @endsection

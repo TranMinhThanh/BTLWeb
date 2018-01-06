@@ -61,11 +61,9 @@ class RequestEditController extends RequestController
             ReadController::checkRead($id,Auth::id());
             return view('editRequest', $data);
         }
-        else if(!empty($request['relations']['assign_to'])){
-            if(Auth::id() == $request['relations']['assign_to']->id){
+        else if((!empty($request['relations']['assign_to'])) &&(Auth::id() == $request['relations']['assign_to']->id)){
                 ReadController::checkRead($id,Auth::id());
                 return view('editRequest', $data);
-            }
         }
         else {
             foreach ($relaters as $relater) {
@@ -90,6 +88,7 @@ class RequestEditController extends RequestController
         $data =$request->all();
         $this ->editValidator($data)->validate();
         $this->edit($data,$data['id']);
+        return redirect($this->redirectTo.$data['id']);
     }
 
     protected function edit(array $data,$id){
@@ -125,8 +124,7 @@ class RequestEditController extends RequestController
         foreach ($diffNewRelaters as $diffNewRelater)
             RelaterController::create($id,$diffNewRelater);
         ReadController::create($request);
-        //send mail
-        $this->sendMail($request, 2);
 
+        CommentController::storeComment($id,Auth::id(),$data['comment']);
     }
 }
